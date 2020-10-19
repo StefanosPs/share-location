@@ -1,0 +1,92 @@
+import Router from 'koa-router';
+import create from './create';
+import get from './get';
+import put from './put';
+import deleteUser from './delete';
+
+const router = Router();
+
+/**
+ * @api {post} /api/user Create a user
+ * @apiDescription Creates a user!
+ * @apiVersion 1.0.0
+ * @apiName CreateUser
+ * @apiGroup User
+ *
+ * @apiExample {curl} Example usage:
+ *      curl -i -X POST --header "Content-Type: application/json" -d '{"username": "testusername", "password": "1aBc!d&"}' http://127.0.0.1:3000/api/user
+ *
+ * @apiParam  {String} fullName The full name of the user
+ * @apiParam  {String} username The username
+ * @apiParam  {String{5..15}} password The password
+ * @apiParam  {String="Administrator","Moderator","User"} [role=User] The role of the user
+ * @apiParam  {String} [emails] The user email
+ *
+ * @apiSuccess {Object} response
+ * @apiSuccess {Object} response.order The placed order
+ * @apiSuccess {String} response.price The price of the order
+ * @apiSuccess {String} response.etaInMinutes The estimated time of arrival in minutes
+ *
+ * @apiError (UnprocessableEntity 422) {Object} ValidationError Invalid request body
+ * @apiError (ServerError 50x) ServerError  Internal server error
+ *
+ */
+router.post('user.create', 'user', create);
+/**
+ * @api {get} /api/user/:id Create a user
+ * @apiDescription Get The user
+ * @apiVersion 1.0.0
+ * @apiName GetUser
+ * @apiGroup User
+ *
+ * @apiExample {curl} Example usage:
+ *      curl -i -X GET http://127.0.0.1:3000/api/user
+ *
+ * @apiParam  {String} fullName The full name of the user
+ * @apiParam  {String} username The username
+ * @apiParam  {String{5..15}} password The password
+ * @apiParam  {String="Administrator","Moderator","User"} [role=User] The role of the user
+ * @apiParam  {String} [emails] The user email
+ *
+ * @apiSuccess {Object} response
+ * @apiSuccess {Object} response.order The placed order
+ * @apiSuccess {String} response.price The price of the order
+ * @apiSuccess {String} response.etaInMinutes The estimated time of arrival in minutes
+ *
+ * @apiError (UnprocessableEntity 422) {Object} ValidationError Invalid request body
+ * @apiError (ServerError 50x) ServerError  Internal server error
+ *
+ */
+router.get('user.get', 'user', get);
+router.get('user.getid', 'user/:id', get);
+
+router.put('user.put', 'user/:id', put);
+/**
+ * @api {delete} /api/user Delete a user
+ * @apiDescription ....
+ * @apiVersion 1.0.0
+ * @apiName DeleteUser
+ * @apiGroup User
+ *
+ * @apiExample {curl} Example usage:
+ *      curl
+ *
+ * @apiParam {Number} id Users unique ID.
+ *
+ * @apiSuccess (Success 200) {Number} status The status code
+ * @apiSuccess (Success 200) {Array} data An empty array
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *    "statusCode": 200,
+ *    "data": []
+ * }
+ *
+ * @apiError (UnprocessableEntity 422) ValidationError Invalid request body
+ * @apiError (ServerError 50x) ServerError  Internal server error
+ *
+ */
+router.delete('user.delete', 'user/:id', deleteUser);
+
+export default router;

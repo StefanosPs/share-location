@@ -1,0 +1,57 @@
+{
+    "columns":[
+        {
+            "field":"id",
+            "title":"Code",
+            "type":"number", 
+            "inputType": "number", 
+            "hidden":true,
+            "order":0
+        },
+        {
+            "field":"fullName",
+            "title":"Full name",
+            "type":"string", 
+            "inputType": "text",
+            "hidden":false,
+            "order":10
+        },
+        {
+            "field":"username",
+            "title":"Username",
+            "type":"string", 
+            "inputType": "text",
+            "hidden":false,
+            "order":20
+        },
+        {
+            "field":"role",
+            "title":"Type",
+            "type":"string", 
+            "inputType": "select",
+            "data": {
+                "options": [
+                    {"key": "ADMIN", "value": "Administrator"},
+                    {"key": "MODERATOR", "value": "Moderator"},
+                    {"key": "USER", "value": "User"}
+                ] 
+            },
+            "hidden":false,
+            "order":30},
+        {
+            "field":"status",
+            "title":"Status",
+            "type":"string", 
+            "inputType": "select",
+            "data": {
+                "options": [
+                    {"key": "ACTIVE", "value": "Active"},
+                    {"key": "INACTIVE", "value": "Disabled"},
+                    {"key": "PEDDING", "value": "Pedding"}
+                ] 
+            },
+            "hidden":false,
+            "order":40
+        }
+    ]
+}   

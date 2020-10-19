@@ -1,0 +1,73 @@
+{
+    "fields": [
+        {
+            "field": "id",
+            "title": "Code",
+            "type": "number",
+            "inputType": "number",
+            "hidden": true,
+            "readOnly": true,
+            "order": 0
+        }, 
+        {
+            "field": "watcherUserId",
+            "title": "Watcher",
+            "type": "number", 
+            "inputType": "select",
+            "data": {
+                "remote": {
+                    "keyField": "id",
+                    "valueField": "fullName",
+                    "table": "user"
+               }
+            },
+            "hidden": false,
+            "readOnly": true,
+            "required": false,
+            "order": 10
+        },
+        {
+            "field": "observeUserId",
+            "title": "Observed User",
+            "type": "number",
+            "inputType": "select",
+            "data": {
+               "remote": {
+                    "keyField": "id",
+                    "valueField": "fullName",
+                    "table": "user",
+                    "url": "/api/connections/valid/observer",
+                    "urlParams": {
+                        "params":{
+                            "valid": "validobsuser"
+                        },
+                        "functions": {
+                            "watcherUserId": "if(values['watcherUserId']) params['watcherUserId'] = values['watcherUserId'];"
+                        }
+                    }
+               }
+            },
+            "hidden": false,
+            "readOnly": false,
+            "readOnlyNewRec": false,
+            "required": true,
+            "order": 20
+        },
+        {
+            "field": "status",
+            "title": "Status",
+            "type": "string",
+            "inputType": "select",
+            "data": {
+                "options": [
+                    {"key": "ACTIVE", "value": "Active"},
+                    {"key": "INACTIVE", "value": "Disabled"},
+                    {"key": "PEDDING", "value": "Pedding"}
+                ] 
+            },
+            "hidden": false,
+            "readOnly": false,
+            "order": 40
+        }
+    ]
+}

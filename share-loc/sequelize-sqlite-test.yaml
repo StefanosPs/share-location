@@ -1,0 +1,6 @@
+dbname: share-loc
+username:
+password:
+params:
+    dialect: sqlite
+    storage: share-loc-test-sequelize.sqlite3

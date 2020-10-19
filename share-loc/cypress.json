@@ -1,0 +1,13 @@
+{
+  "defaultCommandTimeout": 1200000,
+  "requestTimeout": 6000,
+  "video": false,
+  "nodeVersion": "system",
+  "baseUrl": "http://localhost:3001", 
+  "env": {
+    "SEQUELIZE_CONNECT": "sequelize-sqlite-test.yaml",
+    "NODE_ENV": "test",
+    "DOTENV_CONFIG_PATH": ".env.test",
+    "USER_SERVICE_URL": "http://127.0.0.1:3334"
+  }
+}

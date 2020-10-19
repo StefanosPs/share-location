@@ -1,0 +1,79 @@
+{
+    "fields": [
+        {
+            "field": "id",
+            "title": "Code",
+            "type": "number",
+            "inputType": "number",
+            "hidden": true,
+            "readOnly": true,
+            "order": 0
+        },
+        {
+            "field": "fullName",
+            "title": "Full name",
+            "type": "String",
+            "inputType": "text",
+            "hidden": false,
+            "readOnly": false,
+            "required": false,
+            "order": 10
+        },
+        {
+            "field": "username",
+            "title": "Username",
+            "type": "string",
+            "inputType": "text",
+            "hidden": false,
+            "readOnly": true,
+            "readOnlyNewRec": false,
+            "required": true,
+            "order": 20
+        },
+        {
+            "field": "password",
+            "title": "Password",
+            "type": "string",
+            "inputType": "password",
+            "hidden": false,
+            "readOnly": false,
+            "required": true,
+            "minLength": 5,
+            "maxLength": 15,
+            "regex":"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{5,9}$",
+            "order": 20
+        },
+        {
+            "field": "role",
+            "title": "Type",
+            "type": "string",
+            "inputType": "select",
+            "data": {
+                "options": [
+                    {"key": "ADMIN", "value": "Administrator"},
+                    {"key": "MODERATOR", "value": "Moderator"},
+                    {"key": "USER", "value": "User"}
+                ] 
+            },
+            "hidden": false,
+            "readOnly": false,
+            "order": 30
+        },
+        {
+            "field": "status",
+            "title": "Status",
+            "type": "string",
+            "inputType": "select",
+            "data": {
+                "options": [
+                    {"key": "ACTIVE", "value": "Active"},
+                    {"key": "INACTIVE", "value": "Disabled"},
+                    {"key": "PEDDING", "value": "Pedding"}
+                ] 
+            },
+            "hidden": false,
+            "readOnly": false,
+            "order": 40
+        }
+    ]
+}

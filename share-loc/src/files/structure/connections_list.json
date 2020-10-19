@@ -1,0 +1,56 @@
+{
+    "columns":[
+        {
+            "field":"id",
+            "title":"Code",
+            "type":"number",
+            "hidden":true,
+            "order":0
+        },
+        {
+            "field":"watcherUserId",
+            "title":"Watcher",
+            "type":"number",
+            "inputType": "select",
+            "data": {
+                "remote": {
+                    "keyField": "id",
+                    "valueField": "fullName",
+                    "table": "user"
+               }
+            },
+            "hidden":false,
+            "order":10
+        },
+        {
+            "field":"observeUserId",
+            "title":"Observed User",
+            "type":"number",
+            "inputType": "select",
+            "data": {
+               "remote": {
+                    "keyField": "id",
+                    "valueField": "fullName",
+                    "table": "user"
+               }
+            },
+            "hidden":false,
+            "order":20
+        },
+        {
+            "field":"status",
+            "title":"Status",
+            "type":"select",
+            "inputType": "select",
+            "data": {
+                "options": [
+                    {"key": "ACTIVE", "value": "Active"},
+                    {"key": "INACTIVE", "value": "Disabled"},
+                    {"key": "PEDDING", "value": "Pedding"}
+                ] 
+            },
+            "hidden":false,
+            "order":30
+        } 
+    ]
+}   

@@ -1,0 +1,6 @@
+{
+  "name": "user-login-hexagonal-node",
+  "version": "1.0.0",
+  "description": "A cloud-native node microservice boilerplate based on the hexagonal architecture. This microservice manage users and check users credentials.",
+  "title": "user-login-hexagonal-node API docs"
+}

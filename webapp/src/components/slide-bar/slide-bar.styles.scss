@@ -1,0 +1,112 @@
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/mixins";
+.arrow {
+	border: solid black;
+	border-width: 0 1px 1px 0;
+	display: inline-block;
+	padding: 2px;
+	position: relative;
+} 
+.sidebar {
+	background: rgba(0, 0, 0, 0.7);
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: -250px;
+	width: 250px;
+	min-height: 100vh !important;
+	/* middle layer, i.e. appears below the sidebar */
+	z-index: 100;
+	/* animate the transition */
+	transition: $transition-base;
+	box-shadow: $box-shadow;
+	&-header {
+		padding: $nav-link-padding-y $nav-link-padding-x;
+	}
+	&-brand {
+		display: inline-block;
+		padding-top: $navbar-brand-padding-y;
+		padding-bottom: $navbar-brand-padding-y;
+		margin-right: $navbar-padding-x;
+		@include font-size($navbar-brand-font-size);
+		line-height: inherit;
+		white-space: nowrap;
+
+		@include hover-focus() {
+			text-decoration: none;
+		}
+	}
+	.togglebtn {
+		height: 35px;
+		position: absolute;
+		top: calc(25vh - 15.5px);
+		right: -5px;
+		&:hover {
+			right: -7px;
+		}
+		button {
+			font-size: 10px;
+			height: 45px;
+			padding: 2px;
+			border: none;
+			box-shadow: $box-shadow;
+			width: 10px;
+		}
+		.arrow{
+			transform: rotate(-45deg);
+			left: -1px;
+			right:auto;
+    
+			 
+		}
+	}
+	ul {
+		padding: 0 1rem;
+	}
+}
+@include media-breakpoint-up(md) {
+
+.sidebar-show {
+	main {
+		margin-left: 250px;
+	}
+	.sidebar {
+		opacity: 1;
+		left: 0;
+		.togglebtn {
+			&:hover {
+				right: -5px;
+			}
+			 
+			.arrow{
+				transform: rotate(135deg);
+				right: -1px;
+				left:auto;
+			}
+		}
+	}
+}
+}
+
+.sidebar {
+	.nav-pills {
+		.nav-link {
+			@include border-radius($nav-pills-border-radius);
+			color: $body-color;
+		}
+
+		.nav-link.active,
+		.show > .nav-link {
+			background-color: darken($gray-100, 1%);
+		}
+
+		.collapse.show {
+			.nav-link.active,
+			.show > .nav-link {
+				background-color: transparent;
+				color: lighten($body-color, 50%);
+			}
+		}
+	}
+}
