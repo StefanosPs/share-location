@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+  user-login-hexagonal-node:
+    build: ../user
+    container_name: share_loc_user_name
+    networks:
+      - backend
+    environment:
+      SEQUELIZE_CONNECT: "sequelize-sqlite.yaml"
+      HTTP_PORT: "3333"
+      BASIC_AUTH_USERNAME: "usersrv"
+      BASIC_AUTH_PASSWORD: "basic-auth-password"
+    restart: on-failure:10
+  share-location-orchestration-hexagonal-node:
+    build: ../share-loc
+    container_name: share_loc_orchestrator_name
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "3001:3001"
+    environment:
+      SEQUELIZE_CONNECT: "sequelize-sqlite.yaml"
+      HTTP_PORT: "3001"
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASS: "guest"
+      APP_COOKIES_NAME: "APP_COOKIES_NAME"
+      APP_SECRET: "secret1101"
+      APP_JWT_EXPIRATION: 1
+      BASIC_AUTH_USERNAME: "usersrv"
+      BASIC_AUTH_PASSWORD: "basic-auth-password"
+      USER_SERVICE_URL: "http://user-login-hexagonal-node:3333"
+    restart: on-failure:10
+  share-location-single-page-application:
+    build: ../webapp
+    container_name: share_loc_spa_name
+    environment:
+      REACT_APP_BACKEND_PROTOCOL: "http"
+      REACT_APP_BACKEND_HOST: "share-location-orchestration-hexagonal-node"
+      REACT_APP_BACKEND_PORT: "3001"
+      REACT_APP_BACKEND_WS_PROTOCOL: "ws"
+      REACT_APP_BACKEND_WS_HOST: "share_loc_orchestrator_name"
+      REACT_APP_BACKEND_WS_PORT: "3001"
+      REACT_APP_GOOGLEMAPSKEY: 'AIzaSyCD77PxDRJ6ZXGjuLqQUBtuPvkq-qARNg0'
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+    restart: always
+networks: 
+  frontend: 
+    driver: bridge
+  backend:
+    driver: bridge

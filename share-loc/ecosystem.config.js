@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [
 		{
-			name: 'user-node',
+			name: 'share-location-orchestration-hexagonal-node',
 			script: './dist/index.js',
 			instances: 1,
 			autorestart: true,

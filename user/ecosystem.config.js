@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [
 		{
-			name: 'user-node',
+			name: 'user-login-hexagonal-node',
 			script: './dist/index.js',
 			instances: 1,
 			autorestart: true,

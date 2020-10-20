@@ -9,7 +9,7 @@ export default async function getUser(ctx) {
 	try {
 		const user = await ctx.commandBus.execute(command);
 
-		if (user.data && user.data.length < 1) {
+		if (!user || (user.data && user.data.length < 1)) {
 			if (params.id) {
 				Boom.notFound('missing');
 			} else {
