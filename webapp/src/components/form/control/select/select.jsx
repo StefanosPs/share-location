@@ -9,6 +9,9 @@ const BACKEND_HOST =
 	(process.env.REACT_APP_BACKEND_PORT
 		? `:${process.env.REACT_APP_BACKEND_PORT}`
 		: "");
+
+
+
 const FormSelect = ({
 	element,
 	title,
@@ -26,6 +29,19 @@ const FormSelect = ({
 		value: values[name],
 		options: [],
 	});
+
+	const handleChangeSelect = (event, targetName, targetValue) => {
+		if (event) event.persist();
+		const value = event?.target?.value ? event.target.value : targetValue;
+
+		setSelect((prevState) => { 
+			return {
+				...prevState, 
+				value
+			};
+		});
+		return handleChange(event, targetName, targetValue);
+	}
 
 	useEffect(() => {
 		if (element.remote) {
@@ -49,9 +65,6 @@ const FormSelect = ({
 
 			if (!readOnly) {
 				const { url, urlParams } = element.remote;
-				// console.log("url", url);
-				// console.log("urlParams", urlParams);
-
 				const params =
 					urlParams && typeof urlParams.params === "object"
 						? { ...urlParams.params }
@@ -132,7 +145,7 @@ const FormSelect = ({
 				as="select"
 				type={type}
 				value={select.value}
-				onChange={handleChange}
+				onChange={handleChangeSelect}
 				readOnly={readOnly}
 				name={name}
 				isInvalid={!!error}
@@ -145,14 +158,3 @@ const FormSelect = ({
 };
 
 export default FormSelect;
-/**
- {options &&
-    options.map((el) => {
-        console.log(el);
-        return (
-            <option key={`optkey-${name}-${el.id}`} value={el.id}>
-                {el.value}
-            </option>
-        );
-    })}
- */
