@@ -1,5 +1,5 @@
 import User from '../user';
-import {createUser} from '../repository';
+import { createUser } from '../repository';
 
 /**
  * The CreateUserHandler handler.
@@ -13,7 +13,7 @@ export default class CreateUserHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -40,8 +40,8 @@ export default class CreateUserHandler {
 
 		const resp = await createUser.bind(this.dB)(userObj);
 
-		this.eventBus.emit('UserCreated', {user: resp});
+		this.eventBus.emit('UserCreated', { user: resp });
 
-		return {data: [resp]};
+		return { data: [resp] };
 	}
 }

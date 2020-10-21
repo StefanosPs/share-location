@@ -1,4 +1,4 @@
-import {countConnection} from '../repository';
+import { countConnection } from '../repository';
 import ConnectionError from '../error';
 
 /**
@@ -18,12 +18,18 @@ export default class DeleteConnectionCommand {
 		}
 
 		if (!this.id) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')});
+			errors.push({
+				field: 'id',
+				message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')
+			});
 		}
 
 		const userExist = await countConnection.bind(dB)(this.id);
 		if (!userExist) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')});
+			errors.push({
+				field: 'id',
+				message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')
+			});
 		}
 
 		if (errors.length > 0) {
@@ -42,9 +48,10 @@ export default class DeleteConnectionCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new DeleteUser instance
 	 */
-	static buildFromJSON({id}) {
+	static buildFromJSON({ id }) {
 		const deleteUser = new DeleteConnectionCommand();
-		deleteUser.id = id;
+
+		if (id !== undefined) deleteUser.id = parseInt(id, 10);
 		return deleteUser;
 	}
 }

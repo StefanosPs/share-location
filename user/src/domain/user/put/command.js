@@ -1,7 +1,7 @@
 import UserError from '../error';
 import validatePassword from '../validatePassword';
-import {roleType, userStatus} from '../../constants';
-import {getUser} from '../repository';
+import { roleType, userStatus } from '../../constants';
+import { getUser } from '../repository';
 
 /**
  * The command for creating users
@@ -22,7 +22,7 @@ export default class UpdateUserCommand {
 		}
 
 		if (!this.id) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__')});
+			errors.push({ field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__') });
 		}
 
 		if (this.role && !roleType[this.role]) {
@@ -51,9 +51,9 @@ export default class UpdateUserCommand {
 
 		const users = await getUser.bind(dB)(this.id);
 		if (!users) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_USER_NOT_FOUND__')});
+			errors.push({ field: 'id', message: global.__getDictionary('__ERROR_USER_NOT_FOUND__') });
 		} else if (users.length > 1) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_USER_NOT_FOUND__')});
+			errors.push({ field: 'id', message: global.__getDictionary('__ERROR_USER_NOT_FOUND__') });
 		} else {
 			const user = users[0];
 			if (this.username && this.username !== user.username) {
@@ -67,7 +67,7 @@ export default class UpdateUserCommand {
 		if ('password' in this) {
 			const tmpErrors = validatePassword(this.password);
 			tmpErrors.forEach(element => {
-				errors.push({field: 'password', message: element});
+				errors.push({ field: 'password', message: element });
 			});
 		}
 
@@ -87,10 +87,10 @@ export default class UpdateUserCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new UpdateUser instance
 	 */
-	static buildFromJSON({id, username, password, fullName, role, status, emails}) {
+	static buildFromJSON({ id, username, password, fullName, role, status, emails }) {
 		const updateUser = new UpdateUserCommand();
 
-		updateUser.id = id;
+		if (id !== undefined) updateUser.id = parseInt(id, 10);
 		if (username !== undefined) updateUser.username = username;
 		if (password !== undefined && password !== '******') updateUser.password = password;
 		if (fullName !== undefined) updateUser.fullName = fullName;

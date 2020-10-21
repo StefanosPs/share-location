@@ -1,5 +1,5 @@
 import User from '../user';
-import {updateUser} from '../repository';
+import { updateUser } from '../repository';
 /**
  * The UpdateOrderHandler handler.
  *
@@ -12,7 +12,7 @@ export default class UpdateUserHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -38,8 +38,8 @@ export default class UpdateUserHandler {
 
 		const user = await updateUser.bind(this.dB)(command.id, userObj);
 
-		this.eventBus.emit('UserCreated', {user});
+		this.eventBus.emit('UserCreated', { user });
 
-		return {data: [{...user}]};
+		return { data: [{ ...user }] };
 	}
 }

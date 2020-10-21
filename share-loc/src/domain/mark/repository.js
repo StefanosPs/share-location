@@ -9,7 +9,7 @@ import MarkError from './error';
  * @param {object} param0.position
  * @returns {Mark}
  */
-function sanitizedMark({userId, position}) {
+function sanitizedMark({ userId, position }) {
 	return new Mark({
 		userId: parseInt(userId, 10),
 		position
@@ -50,7 +50,7 @@ export async function createUpdateMark(mark) {
 		throw new MarkError(
 			this,
 			422,
-			[{field: 'userId', message: global.__getDictionary('__ERROR_USER_ID__')}],
+			[{ field: 'userId', message: global.__getDictionary('__ERROR_USER_ID__') }],
 			`createUpdateMark:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}

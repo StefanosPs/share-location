@@ -10,7 +10,7 @@ import User from './user';
  * @param {*} param0
  * @returns {User}
  */
-function sanitizedUser({id, username, fullName, role, status, emails}) {
+function sanitizedUser({ id, username, fullName, role, status, emails }) {
 	return new User({
 		id,
 		username,
@@ -153,7 +153,7 @@ export async function updateUser(id, user) {
 	}
 
 	if (user instanceof User) {
-		const updData = {...user};
+		const updData = { ...user };
 		if ('password' in updData && updData.password !== '******') {
 			updData.password = await bcrypt.hashSync(user.password, 10);
 		}

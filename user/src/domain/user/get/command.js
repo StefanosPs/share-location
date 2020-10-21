@@ -49,9 +49,10 @@ export default class GetUserCommand {
 	}) {
 		const getUser = new GetUserCommand();
 
-		if (id !== undefined) getUser.id = id;
-		if (page !== undefined) getUser.page = page;
-		if (sizePerPage !== undefined) getUser.sizePerPage = sizePerPage;
+		if (id === 'init') getUser.id = 'init';
+		else if (id !== undefined) getUser.id = parseInt(id, 10);
+		if (page !== undefined) getUser.page = parseInt(page, 10);
+		if (sizePerPage !== undefined) getUser.sizePerPage = parseInt(sizePerPage, 10);
 		if (idIn !== undefined) getUser.idIn = idIn;
 		if (idNotIn !== undefined) getUser.idNotIn = idNotIn;
 

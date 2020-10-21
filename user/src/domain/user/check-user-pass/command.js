@@ -1,4 +1,4 @@
-import {getUserByUsername} from '../repository';
+import { getUserByUsername } from '../repository';
 import UserError from '../error';
 import validatePassword from '../validatePassword';
 
@@ -15,7 +15,10 @@ export default class CheckUserPassCommand {
 	async validate(dB) {
 		const errors = [];
 		if (!this.username) {
-			errors.push({field: 'username', message: global.__getDictionary('__ERROR_EMPTY_USERNAME__')});
+			errors.push({
+				field: 'username',
+				message: global.__getDictionary('__ERROR_EMPTY_USERNAME__')
+			});
 		} else {
 			const user = await getUserByUsername.bind(dB)(this.username);
 			if (!user) {
@@ -37,7 +40,7 @@ export default class CheckUserPassCommand {
 			//   message: global.__getDictionary('__ERROR_CHECK_USENAMEPASSWORD_WRONG_PASSWORD__')
 			// });
 			tmpErrors.forEach(element => {
-				errors.push({field: 'password', message: element});
+				errors.push({ field: 'password', message: element });
 			});
 		}
 
@@ -57,7 +60,7 @@ export default class CheckUserPassCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new CheckUserPassCommand instance
 	 */
-	static buildFromJSON({username, password}) {
+	static buildFromJSON({ username, password }) {
 		const login = new CheckUserPassCommand();
 		login.username = username;
 		login.password = password;

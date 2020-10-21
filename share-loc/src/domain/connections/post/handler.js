@@ -1,5 +1,5 @@
 import Connection from '../connection';
-import {createConnection} from '../repository';
+import { createConnection } from '../repository';
 
 /**
  * The CreateConnectionHandler handler.
@@ -13,7 +13,7 @@ export default class CreateConnectionHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -36,8 +36,8 @@ export default class CreateConnectionHandler {
 
 		const resp = await createConnection.bind(this.dB)(connectionObj);
 
-		this.eventBus.emit('CreateConnection', {connection: resp});
+		this.eventBus.emit('CreateConnection', { connection: resp });
 
-		return {data: [resp]};
+		return { data: [resp] };
 	}
 }

@@ -3,7 +3,7 @@
  * with a very primitive DI mechanism.
  */
 class Registry {
-	constructor({eventBus, dB}) {
+	constructor({ eventBus, dB }) {
 		this.map = new Map();
 		this.map.set('eventBus', eventBus);
 		this.map.set('dB', dB);

@@ -27,7 +27,7 @@ class CommandBus {
 	 * @param {Registry} options.registry - a registry of dependencies
 	 * to inject to resolved handlers.
 	 */
-	constructor({registry}) {
+	constructor({ registry }) {
 		this.registry = registry;
 	}
 

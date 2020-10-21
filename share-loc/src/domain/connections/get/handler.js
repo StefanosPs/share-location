@@ -1,5 +1,5 @@
 import Connection from '../connection';
-import {getConnection, countConnection, getUserOfConnection, getUsers} from '../repository';
+import { getConnection, countConnection, getUserOfConnection, getUsers } from '../repository';
 
 /**
  * The GetConnectionHandler handler.
@@ -13,7 +13,7 @@ export default class GetConnectionHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -37,10 +37,14 @@ export default class GetConnectionHandler {
 
 			const [countVar, userData] = await Promise.all([
 				countConnection.bind(this.dB)(),
-				getUsers.bind(this.dB)({where: {id_in: relationsUserIds}})
+				getUsers.bind(this.dB)({ where: { id_in: relationsUserIds } })
 			]);
 
-			return {data: [{...connectionObj}], relData: {user: userData}, meta: {totalCount: countVar}};
+			return {
+				data: [{ ...connectionObj }],
+				relData: { user: userData },
+				meta: { totalCount: countVar }
+			};
 		}
 		const params = {};
 
@@ -55,7 +59,7 @@ export default class GetConnectionHandler {
 		}
 
 		if (command.watcherUserId) {
-			params.where = {watcherUserId: command.watcherUserId};
+			params.where = { watcherUserId: command.watcherUserId };
 		}
 
 		const relationsUserIds = await getUserOfConnection.bind(this.dB)(command.watcherUserId, params);
@@ -63,14 +67,14 @@ export default class GetConnectionHandler {
 		const [connectionArray, countVar, userData] = await Promise.all([
 			getConnection.bind(this.dB)(command.id, params),
 			countConnection.bind(this.dB)(),
-			getUsers.bind(this.dB)({where: {id_in: relationsUserIds}})
+			getUsers.bind(this.dB)({ where: { id_in: relationsUserIds } })
 		]);
 
-		this.eventBus.emit('GetConnection', {id: command.id});
+		this.eventBus.emit('GetConnection', { id: command.id });
 
 		const data = connectionArray ? [...connectionArray] : [];
 
-		return {data, relData: {user: userData}, meta: {totalCount: countVar}};
+		return { data, relData: { user: userData }, meta: { totalCount: countVar } };
 	}
 }
 

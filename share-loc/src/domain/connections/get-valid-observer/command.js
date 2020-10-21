@@ -46,14 +46,14 @@ export default class GetValidObserverCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new GetUser instance
 	 */
-	static buildFromJSON({payloadUser, id, page, sizePerPage, watcherUserId, sortField, sortOrder}) {
+	static buildFromJSON({ payloadUser, id, page, sizePerPage, watcherUserId }) {
 		const getValidObserver = new GetValidObserverCommand();
 
-		if (id !== undefined) getValidObserver.id = id;
+		if (id !== undefined) getValidObserver.id = parseInt(id, 10);
 		if (payloadUser) getValidObserver.payloadUser = payloadUser;
-		if (watcherUserId !== undefined) getValidObserver.watcherUserId = watcherUserId;
-		if (page !== undefined) getValidObserver.page = page;
-		if (sizePerPage !== undefined) getValidObserver.sizePerPage = sizePerPage;
+		if (watcherUserId !== undefined) getValidObserver.watcherUserId = parseInt(watcherUserId, 10);
+		if (page !== undefined) getValidObserver.page = parseInt(page, 10);
+		if (sizePerPage !== undefined) getValidObserver.sizePerPage = parseInt(sizePerPage, 10);
 
 		return getValidObserver;
 	}

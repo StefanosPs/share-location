@@ -1,7 +1,7 @@
 import UserError from '../error';
 import validatePassword from '../validatePassword';
-import {getUserByUsername} from '../repository';
-import {roleType, userStatus} from '../../constants';
+import { getUserByUsername } from '../repository';
+import { roleType, userStatus } from '../../constants';
 
 /**
  * The command for creating users
@@ -66,7 +66,7 @@ export default class CreateUserCommand {
 
 		const tmpErrors = validatePassword(this.password);
 		tmpErrors.forEach(element => {
-			errors.push({field: 'password', message: element});
+			errors.push({ field: 'password', message: element });
 		});
 
 		if (errors.length > 0) {
@@ -85,7 +85,7 @@ export default class CreateUserCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new CreateUser instance
 	 */
-	static buildFromJSON({username, password, fullName, role, status, emails}) {
+	static buildFromJSON({ username, password, fullName, role, status, emails }) {
 		const createUser = new CreateUserCommand();
 
 		if (username !== undefined) createUser.username = username;

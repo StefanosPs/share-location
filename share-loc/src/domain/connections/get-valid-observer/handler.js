@@ -1,4 +1,4 @@
-import {getUserOfConnection, getUsers} from '../repository';
+import { getUserOfConnection, getUsers } from '../repository';
 
 /**
  * The GetConnectionHandler handler.
@@ -12,7 +12,7 @@ export default class GetConnectionHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -50,15 +50,15 @@ export default class GetConnectionHandler {
 		if (!params.where.notIn) params.where.notIn = {};
 		params.where.notIn.id = notInArray;
 
-		const userData = await getUsers.bind(this.dB)({where: {id_not_in: relationsUserIds}});
+		const userData = await getUsers.bind(this.dB)({ where: { id_not_in: relationsUserIds } });
 
 		// console.log(userData);
 
-		this.eventBus.emit('GetConnectionHandler', {id: command.id});
+		this.eventBus.emit('GetConnectionHandler', { id: command.id });
 
 		const data = userData ? [...userData] : [];
 
-		return {data, meta: {totalCount: userData.length}};
+		return { data, meta: { totalCount: userData.length } };
 	}
 }
 

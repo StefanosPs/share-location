@@ -1,6 +1,6 @@
 // import Mark from '../mark';
-import {getMark, countMark} from '../repository';
-import {getUserOfConnection, getUsers} from '../../connections/repository';
+import { getMark, countMark } from '../repository';
+import { getUserOfConnection, getUsers } from '../../connections/repository';
 /**
  * The GetMarkHandler handler.
  *
@@ -13,7 +13,7 @@ export default class GetMarkHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -43,7 +43,7 @@ export default class GetMarkHandler {
 		if (command.watcherUserId) {
 			users = await getUserOfConnection.bind(this.dB)(command.watcherUserId);
 			if (users && Array.isArray(users)) {
-				params.where = {userId: [...users, command.watcherUserId]};
+				params.where = { userId: [...users, command.watcherUserId] };
 			}
 		}
 
@@ -58,12 +58,12 @@ export default class GetMarkHandler {
 			return false;
 		});
 
-		const userData = await getUsers.bind(this.dB)({where: {id_in: relationsUserIds}});
+		const userData = await getUsers.bind(this.dB)({ where: { id_in: relationsUserIds } });
 
-		this.eventBus.emit('GetMark', {id: command.id});
+		this.eventBus.emit('GetMark', { id: command.id });
 		if (markArray) {
-			return {data: markArray, relData: {user: userData}, meta: {totalCount: countVar}};
+			return { data: markArray, relData: { user: userData }, meta: { totalCount: countVar } };
 		}
-		return {data: [], meta: {totalCount: countVar}};
+		return { data: [], meta: { totalCount: countVar } };
 	}
 }

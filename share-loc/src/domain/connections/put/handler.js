@@ -1,5 +1,5 @@
 import Connection from '../connection';
-import {updateConnection} from '../repository';
+import { updateConnection } from '../repository';
 
 export default class UpdateConnectionHandler {
 	/**
@@ -8,7 +8,7 @@ export default class UpdateConnectionHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -31,8 +31,8 @@ export default class UpdateConnectionHandler {
 
 		const connection = await updateConnection.bind(this.dB)(command.id, connectionObj);
 
-		this.eventBus.emit('UpdateConnection', {connection});
+		this.eventBus.emit('UpdateConnection', { connection });
 
-		return {data: [connection]};
+		return { data: [connection] };
 	}
 }

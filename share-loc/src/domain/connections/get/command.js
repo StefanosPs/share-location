@@ -47,14 +47,15 @@ export default class GetConnectionCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new GetUser instance
 	 */
-	static buildFromJSON({payloadUser, id, page, sizePerPage, watcherUserId, sortField, sortOrder}) {
+	static buildFromJSON({ payloadUser, id, page, sizePerPage, watcherUserId }) {
 		const getGetConnection = new GetConnectionCommand();
 
-		if (id !== undefined) getGetConnection.id = id;
+		if (id === 'init') getGetConnection.id = 'init';
+		else if (id !== undefined) getGetConnection.id = parseInt(id, 10);
 		if (payloadUser) getGetConnection.payloadUser = payloadUser;
-		if (watcherUserId !== undefined) getGetConnection.watcherUserId = watcherUserId;
-		if (page !== undefined) getGetConnection.page = page;
-		if (sizePerPage !== undefined) getGetConnection.sizePerPage = sizePerPage;
+		if (watcherUserId !== undefined) getGetConnection.watcherUserId = parseInt(watcherUserId, 10);
+		if (page !== undefined) getGetConnection.page = parseInt(page, 10);
+		if (sizePerPage !== undefined) getGetConnection.sizePerPage = parseInt(sizePerPage, 10);
 
 		return getGetConnection;
 	}

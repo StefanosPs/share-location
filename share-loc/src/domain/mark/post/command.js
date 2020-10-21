@@ -37,7 +37,7 @@ export default class CreateMarkCommand {
 		}
 
 		if (!this.userId) {
-			errors.push({field: 'userId', message: global.__getDictionary('__ERROR_USER_ID__')});
+			errors.push({ field: 'userId', message: global.__getDictionary('__ERROR_USER_ID__') });
 		}
 
 		// const connections = await getConnectionWatcherObserver.bind(dB)(
@@ -61,7 +61,7 @@ export default class CreateMarkCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new CreateUser instance
 	 */
-	static buildFromJSON({payloadUser, userId, position}) {
+	static buildFromJSON({ payloadUser, userId, position }) {
 		const createConnection = new CreateMarkCommand();
 
 		if (payloadUser) createConnection.payloadUser = payloadUser;

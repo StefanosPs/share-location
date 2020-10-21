@@ -1,4 +1,4 @@
-import {userPasswordCheck} from '../repository';
+import { userPasswordCheck } from '../repository';
 import UserError from '../error';
 
 /**
@@ -13,7 +13,7 @@ export default class CheckUserPassCommandHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -31,16 +31,16 @@ export default class CheckUserPassCommandHandler {
 		try {
 			const res = await userPasswordCheck.bind(this.dB)(command.username, command.password);
 
-			this.eventBus.emit('login ok', {username: command.username});
+			this.eventBus.emit('login ok', { username: command.username });
 
-			return {data: [{...res}]};
+			return { data: [{ ...res }] };
 		} catch (error) {
-			this.eventBus.emit('login fail', {username: command.username});
+			this.eventBus.emit('login fail', { username: command.username });
 			if (error instanceof UserError) {
 				const errorsAr =
 					UserError.errors && UserError.errors.length > 0
 						? [...UserError.errors]
-						: [{field: '', mesage: error.message}];
+						: [{ field: '', mesage: error.message }];
 				throw new UserError(
 					this,
 					422,

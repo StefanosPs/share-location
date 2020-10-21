@@ -1,4 +1,4 @@
-import {deleteUser} from '../repository';
+import { deleteUser } from '../repository';
 
 /**
  * The DeleteUserHandler handler.
@@ -12,7 +12,7 @@ export default class DeleteUserHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -28,9 +28,9 @@ export default class DeleteUserHandler {
 		await command.validate(this.dB);
 
 		await deleteUser.bind(this.dB)(command.id);
-		this.eventBus.emit('DeleteUser', {id: command.id});
+		this.eventBus.emit('DeleteUser', { id: command.id });
 
-		return {data: []};
+		return { data: [] };
 	}
 }
 

@@ -1,5 +1,5 @@
 import Mark from '../mark';
-import {createUpdateMark} from '../repository';
+import { createUpdateMark } from '../repository';
 
 /**
  * The CreateMarkHandler handler.
@@ -13,7 +13,7 @@ export default class CreateMarkHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -38,6 +38,6 @@ export default class CreateMarkHandler {
 
 		this.eventBus.emit('createMark', resp);
 
-		return {data: [resp]};
+		return { data: [resp] };
 	}
 }

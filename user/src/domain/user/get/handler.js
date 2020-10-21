@@ -1,5 +1,5 @@
 import User from '../user';
-import {getUser, countUsers} from '../repository';
+import { getUser, countUsers } from '../repository';
 
 /**
  * The GetUserHandler handler.
@@ -13,7 +13,7 @@ export default class GetUserHandler {
 	 * @param {object} params
 	 * @param {EventEmitter} params.eventBus - the bus to emit any events on
 	 */
-	constructor({eventBus, dB} = {}) {
+	constructor({ eventBus, dB } = {}) {
 		this.eventBus = eventBus;
 		this.dB = dB;
 	}
@@ -35,9 +35,9 @@ export default class GetUserHandler {
 
 			const [countVar] = await Promise.all([countUsers.bind(this.dB)()]);
 
-			return {data: [{...userObj}], meta: {totalCount: countVar}};
+			return { data: [{ ...userObj }], meta: { totalCount: countVar } };
 		}
-		const params = {where: {}};
+		const params = { where: {} };
 		if (command.page) {
 			params.page = command.page;
 		}
@@ -60,15 +60,15 @@ export default class GetUserHandler {
 			getUser.bind(this.dB)(command.id, params),
 			countUsers.bind(this.dB)()
 		]);
-		this.eventBus.emit('GetUser', {id: command.id});
+		this.eventBus.emit('GetUser', { id: command.id });
 
 		// console.log(' process.env.SEQUELIZE_CONNECT',  process.env.SEQUELIZE_CONNECT )
 		// console.log('userArray', userArray);
 		// console.log('countVar', countVar);
 		if (userArray) {
-			return {data: userArray, meta: {totalCount: countVar}};
+			return { data: userArray, meta: { totalCount: countVar } };
 		}
-		return {data: [], meta: {totalCount: countVar}};
+		return { data: [], meta: { totalCount: countVar } };
 	}
 }
 

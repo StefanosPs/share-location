@@ -1,7 +1,7 @@
 import ConnectionError from '../error';
-import {connectionsStatus} from '../../constants';
+import { connectionsStatus } from '../../constants';
 
-import {getConnectionWatcherObserver} from '../repository';
+import { getConnectionWatcherObserver } from '../repository';
 
 /**
  * The command for creating users
@@ -74,7 +74,6 @@ export default class CreateConnectionCommand {
 			}
 		}
 
-		
 		if (errors.length > 0) {
 			throw new ConnectionError(
 				this,
@@ -91,7 +90,7 @@ export default class CreateConnectionCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new CreateUser instance
 	 */
-	static buildFromJSON({payloadUser, watcherUserId, observeUserId, status}) {
+	static buildFromJSON({ payloadUser, watcherUserId, observeUserId, status }) {
 		const createConnection = new CreateConnectionCommand();
 
 		if (payloadUser) createConnection.payloadUser = payloadUser;

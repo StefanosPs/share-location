@@ -1,7 +1,7 @@
 import ConnectionError from '../error';
-import {connectionsStatus} from '../../constants';
+import { connectionsStatus } from '../../constants';
 
-import {getConnection, getConnectionWatcherObserver} from '../repository';
+import { getConnection, getConnectionWatcherObserver } from '../repository';
 
 /**
  * The command for creating users
@@ -22,7 +22,7 @@ export default class UpdateConnectionCommand {
 		}
 
 		if (!this.id) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__')});
+			errors.push({ field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__') });
 		}
 
 		if (this.status && !connectionsStatus[this.status]) {
@@ -39,9 +39,15 @@ export default class UpdateConnectionCommand {
 
 		const connections = await getConnection.bind(dB)(this.id);
 		if (!connections) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')});
+			errors.push({
+				field: 'id',
+				message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')
+			});
 		} else if (connections.length > 1) {
-			errors.push({field: 'id', message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')});
+			errors.push({
+				field: 'id',
+				message: global.__getDictionary('__ERROR_CONNECTION_NOT_FOUND__')
+			});
 		} else {
 			const connection = connections[0];
 			if (this.watcherUserId && this.watcherUserId !== connection.watcherUserId) {
@@ -88,7 +94,7 @@ export default class UpdateConnectionCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new CreateUser instance
 	 */
-	static buildFromJSON({payloadUser, id, watcherUserId, observeUserId, status}) {
+	static buildFromJSON({ payloadUser, id, watcherUserId, observeUserId, status }) {
 		const updateConnection = new UpdateConnectionCommand();
 
 		updateConnection.id = id;

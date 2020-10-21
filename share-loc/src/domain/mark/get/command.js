@@ -46,10 +46,11 @@ export default class GetMarkCommand {
 	 * @param {object} json - the JSON to build from
 	 * @returns a new GetUser instance
 	 */
-	static buildFromJSON({payloadUser, id, page, sizePerPage, watcherUserId}) {
+	static buildFromJSON({ payloadUser, id, page, sizePerPage, watcherUserId }) {
 		const getMarkCommand = new GetMarkCommand();
-		getMarkCommand.id = id;
 
+		if (id === 'init') getMarkCommand.id = 'init';
+		else if (id !== undefined) getMarkCommand.id = parseInt(id, 10);
 		if (payloadUser) getMarkCommand.payloadUser = payloadUser;
 		if (watcherUserId !== undefined) getMarkCommand.watcherUserId = Number(watcherUserId);
 

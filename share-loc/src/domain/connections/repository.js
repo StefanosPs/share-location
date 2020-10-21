@@ -11,7 +11,7 @@ import ConnectionError from './error';
  * @param {string} param0.status
  * @returns {Connection}
  */
-function sanitizedConnection({id, watcherUserId, observeUserId, status}) {
+function sanitizedConnection({ id, watcherUserId, observeUserId, status }) {
 	return new Connection({
 		id,
 		watcherUserId: parseInt(watcherUserId, 10),
@@ -26,7 +26,7 @@ function sanitizedConnection({id, watcherUserId, observeUserId, status}) {
  * @param {string} param0.fullName
  * @returns {object}
  */
-function sanitizedUser({id, fullName}) {
+function sanitizedUser({ id, fullName }) {
 	return {
 		id,
 		fullName
@@ -66,7 +66,7 @@ export async function createConnection(connection) {
 		throw new ConnectionError(
 			this,
 			422,
-			[{field: 'watcherUserId', message: global.__getDictionary('__ERROR_WATCHER_USER_ID__')}],
+			[{ field: 'watcherUserId', message: global.__getDictionary('__ERROR_WATCHER_USER_ID__') }],
 			`createConnection:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}
@@ -75,7 +75,7 @@ export async function createConnection(connection) {
 		throw new ConnectionError(
 			this,
 			422,
-			[{field: 'observeUserId', message: global.__getDictionary('__ERROR_OBSERVE_USER_ID__')}],
+			[{ field: 'observeUserId', message: global.__getDictionary('__ERROR_OBSERVE_USER_ID__') }],
 			`createConnection:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}
@@ -129,7 +129,7 @@ export async function getConnectionWatcherObserver(watcherUserId, observeUserId)
 		throw new ConnectionError(
 			this,
 			422,
-			[{field: 'watcherUserId', message: global.__getDictionary('__ERROR_WATCHER_USER_ID__')}],
+			[{ field: 'watcherUserId', message: global.__getDictionary('__ERROR_WATCHER_USER_ID__') }],
 			`getConnectionWatcherObserver:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}
@@ -138,7 +138,7 @@ export async function getConnectionWatcherObserver(watcherUserId, observeUserId)
 		throw new ConnectionError(
 			this,
 			422,
-			[{field: 'observeUserId', message: global.__getDictionary('__ERROR_OBSERVE_USER_ID__')}],
+			[{ field: 'observeUserId', message: global.__getDictionary('__ERROR_OBSERVE_USER_ID__') }],
 			`getConnectionWatcherObserver:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}
@@ -166,7 +166,7 @@ export async function getUserOfConnection(watcherUserId, params = {}) {
 		throw new ConnectionError(
 			this,
 			422,
-			[{field: 'watcherUserId', message: global.__getDictionary('__ERROR_WATCHER_USER_ID__')}],
+			[{ field: 'watcherUserId', message: global.__getDictionary('__ERROR_WATCHER_USER_ID__') }],
 			`getUserOfConnection:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}
@@ -185,7 +185,7 @@ export async function updateConnection(id, connection) {
 		throw new ConnectionError(
 			this,
 			422,
-			[{field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__')}],
+			[{ field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__') }],
 			`updateConnection:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}
@@ -213,7 +213,7 @@ export async function deleteConnection(id) {
 		throw new ConnectionError(
 			this,
 			422,
-			[{field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__')}],
+			[{ field: 'id', message: global.__getDictionary('__ERROR_EMPTY_ID__') }],
 			`deleteConnection:: ${global.__getDictionary('__ERROR_WRONG_ARGUMENTS__')}`
 		);
 	}
