@@ -1,4 +1,4 @@
-# share-location-orchestration-hexagonal-node":
+# share-location-orchestration-hexagonal-node:
 
 > The orchestrator of share location app.
 
@@ -7,7 +7,7 @@
 
 ## Development
 
-```sh
+```bash
 # start in development mode using nodemon
 yarn dev
 
@@ -38,7 +38,20 @@ yarn build
 # start production build
 yarn start
 ```
+## Docker
+```bash
+# builds an image from a Dockerfile
+docker build -t share_loc_orchestrator_image .
 
+docker run -it --name share_loc_orchestrator_name -p 3001:3001 share_loc_orchestrator_image
+
+##Connect to docker
+docker exec -it share_loc_orchestrator_name /bin/sh
+docker exec -it share_loc_orchestrator_name pm2 monit
+docker exec -it share_loc_orchestrator_name pm2 list
+docker exec -it share_loc_orchestrator_name pm2 show
+docker exec -it share_loc_orchestrator_name pm2 reload all
+```
 ## Docs
 
 ```sh

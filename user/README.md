@@ -34,6 +34,20 @@ yarn build
 # start production build
 yarn start
 ```
+## Docker
+```bash
+# builds an image from a Dockerfile
+docker build -t share_loc_user_image .
+
+docker run -it --name share_loc_user_name -p 3333:3333 share_loc_user_image
+
+##Connect to docker
+docker exec -it share_loc_user_name /bin/sh
+docker exec -it share_loc_user_name pm2 monit
+docker exec -it share_loc_user_name pm2 list
+docker exec -it share_loc_user_name pm2 show
+docker exec -it share_loc_user_name pm2 reload all
+```
 
 ## Docs
 

@@ -1,4 +1,4 @@
-FROM keymetrics/pm2:latest-alpine
+FROM keymetrics/pm2:12-alpine
 
 ENV USER_SERVICE_URL="http://service-usersauth:3333" 
 
@@ -24,6 +24,9 @@ RUN yarn install --ignore-engines
 COPY ecosystem.config.js .
 COPY .eslintrc .
 COPY .babelrc .
+# COPY .env .
+COPY sequelize-sqlite.yaml .
+COPY users-sequelize.sqlite3 .
 
 # Copy in the src files
 # Ideally we would want to delete src afterwards
@@ -35,7 +38,7 @@ COPY src ./src
 RUN yarn build
 ENV NODE_ENV production
 
-EXPOSE 3000
+EXPOSE 3001
 
 # Launch it
 CMD ["pm2-runtime",  "start", "ecosystem.config.js"]

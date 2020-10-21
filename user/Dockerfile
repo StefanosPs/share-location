@@ -1,6 +1,7 @@
-FROM keymetrics/pm2:latest-alpine
+FROM keymetrics/pm2:12-alpine
 
 # Create the app directory
+RUN rm -rf /app
 RUN mkdir -p /app
 RUN chown -R node:node /app
 
@@ -19,9 +20,13 @@ COPY package.json yarn.lock ./
 COPY ecosystem.config.js .
 COPY .eslintrc .
 COPY .babelrc .
+# COPY .env .
+COPY sequelize-sqlite.yaml .
+COPY users-sequelize.sqlite3 .
 
-# Install app dependencies
-RUN yarn install --ignore-engines
+# Install app dependencies 
+RUN yarn install --ignore-engines  
+# RUN yarn install --ignore-engines --production=true
 
 # Copy in the src files
 # Ideally we would want to delete src afterwards
@@ -32,6 +37,11 @@ COPY src ./src
 # Build and set production
 RUN yarn build
 ENV NODE_ENV production
+
+# ENV SEQUELIZE_CONNECT sequelize-sqlite.yaml
+# ENV HTTP_PORT 3333
+# ENV BASIC_AUTH_USERNAME usersrv
+# ENV BASIC_AUTH_PASSWORD=basic-auth-password
 
 EXPOSE 3333
 
