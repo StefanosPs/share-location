@@ -19,7 +19,9 @@
     "preteste2e:runserver": "yarn build",
     "teste2e:runserver": "cross-env DOTENV_CONFIG_PATH=.env.test node dist/index.js",
     "cy:open": "cypress open",
-    "cy:run": " cypress run"
+    "cy:run": " cypress run",
+    "docker": "pm2-runtime start ecosystem.config.js",
+    "docker-build": "docker build -t share_loc_orchestrator_image ."
   },
   "husky": {
     "hooks": {
@@ -69,6 +71,7 @@
     "sqlite3": "5.0.0",
     "superagent": "5.3.1",
     "url": "0.11.0",
+    "cross-env": "6.0.3",
     "uuid": "3.3.3"
   },
   "devDependencies": {
@@ -81,7 +84,6 @@
     "apidoc": "0.17.7",
     "babel-jest": "26.6.0",
     "babel-plugin-module-resolver": "3.2.0",
-    "cross-env": "6.0.3",
     "cypress": "5.3.0",
     "eslint": "6.5.1",
     "eslint-config-airbnb-base": "14.0.0",
