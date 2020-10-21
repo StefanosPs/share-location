@@ -10,14 +10,14 @@ module.exports = {
   reporters: [
     'default',
     [
-      './node_modules/jest-html-reporter',
+      '../node_modules/jest-html-reporter',
       {
         pageTitle: 'Unit tests report',
         outputPath: './reports/unit/index.html'
       }
     ]
   ],
-  silent: false,
+  silent: true,
   rootDir: '../',
   setupFiles: ['<rootDir>/jest/setup.js'],
   testEnvironment: 'node',
