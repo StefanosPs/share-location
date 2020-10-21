@@ -16,7 +16,7 @@ USER node
 WORKDIR /app
 
 # Copy in the NPM dependency files
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Install app dependencies
 RUN yarn install --ignore-engines

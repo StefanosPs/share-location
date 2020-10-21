@@ -15,7 +15,7 @@ USER node
 WORKDIR /app
 
 # Copy in the NPM dependency files
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 COPY ecosystem.config.js .
 COPY .eslintrc .
