@@ -24,6 +24,7 @@ FROM nginx:1.19.3-alpine
 
 COPY --from=build-step /app/build /usr/share/nginx/html
 
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx/templates/nginx.conf.template /etc/nginx/templates/nginx.conf.template
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
