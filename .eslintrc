@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "airbnb-base", 
+    "prettier",
+    "plugin:cypress/recommended"
+  ],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "no-console": "off",
+    "no-underscore-dangle": ["error", { "allow": ["__getDictionary"] }]
+  },
+  
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
+  "env": {
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "globals": {
+    "fail": "readonly"
+  }
+}
