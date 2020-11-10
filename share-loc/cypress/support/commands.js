@@ -25,42 +25,42 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.overwrite('request', (originalFn, ...args) => {
-  let options = {
-    failOnStatusCode: false,
-    mode: 'cors',
-    credentials: 'include'
-  };
-  const token = Cypress.env('cust_auth_token');
-  if (token) {
-    options.auth = {
-      bearer: token
-    };
-  }
-  if (typeof args[0] === 'object') {
-    options = {...args[0]};
-  } else if (args.length === 1) {
-    [options.url] = args;
-  } else if (args.length === 2) {
-    [options.method, options.url] = args;
-  } else if (args.length === 3) {
-    [options.method, options.url, options.body] = args;
-  }
+	let options = {
+		failOnStatusCode: false,
+		mode: 'cors',
+		credentials: 'include'
+	};
+	const token = Cypress.env('cust_auth_token');
+	if (token) {
+		options.auth = {
+			bearer: token
+		};
+	}
+	if (typeof args[0] === 'object') {
+		options = { ...args[0] };
+	} else if (args.length === 1) {
+		[options.url] = args;
+	} else if (args.length === 2) {
+		[options.method, options.url] = args;
+	} else if (args.length === 3) {
+		[options.method, options.url, options.body] = args;
+	}
 
-  return originalFn({...options});
+	return originalFn({ ...options });
 });
 Cypress.Commands.add('login', () => {
-  cy.request('POST', '/jwt/login', {
-    username: 'username1',
-    password: 'p2ssword'
-  }).then(response => {
-    const {body} = response;
-    const token = body.data[0].token;
-    Cypress.env('cust_auth_token', token); 
-  });
+	cy.request('POST', '/jwt/login', {
+		username: 'username1',
+		password: 'p2ssword'
+	}).then(response => {
+		const { body } = response;
+		const { token } = body.data[0];
+		Cypress.env('cust_auth_token', token);
+	});
 });
 
 Cypress.Commands.add('logout', () => {
-  cy.request('POST', '/jwt/logout').then(response => {
-    Cypress.env('cust_auth_token', null);
-  });
+	cy.request('POST', '/jwt/logout').then(response => {
+		Cypress.env('cust_auth_token', null);
+	});
 });
