@@ -1,14 +1,17 @@
 {
 	"private": true,
-	"workspaces": [
-		"user",
-		"share-loc",
-		"webapp"
-	],
+	"workspaces": {
+		"packages": [
+			"user",
+			"share-loc",
+			"webapp"
+		],
+		"nohoist": ["husky"]
+	},
 	"devDependencies": {
 		"@commitlint/cli": "8.2.0",
 		"@commitlint/config-conventional": "8.2.0",
-		"eslint": "^6.6.0",
+		"eslint": "7.13.0",
 		"eslint-config-airbnb-base": "14.0.0",
 		"eslint-config-prettier": "6.4.0",
 		"eslint-import-resolver-babel-module": "5.1.0",
@@ -33,5 +36,9 @@
 			"prettier --write",
 			"git add"
 		]
+	},
+	"engines": {
+		"node": ">=10.22.1",
+		"npm": ">=6.9"
 	}
 }
