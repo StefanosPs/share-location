@@ -79,5 +79,5 @@ export default class GetConnectionHandler {
 }
 
 /**
- * @typedef {Object[]} List of the users
+ * @typedef {Object[]} List of the Connection
  */
