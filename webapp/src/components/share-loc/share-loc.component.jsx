@@ -1,28 +1,15 @@
-import React, { useState, useContext, createContext, useEffect } from "react";
-import socketIOClient from "socket.io-client";
+import React, { useState, useContext, createContext, useEffect } from 'react';
+import socketIOClient from 'socket.io-client';
 
 // import Loading from "../loading/loading.component";
 
-import fetchUtils from "../../api/APIUtils";
-import inMemoryJWT from "../../authentication/in-memory-jwt";
+import { fetchJson, getBackEndHost, getBackEndWsHost } from '../../api/APIUtils';
+import inMemoryJWT from '../../authentication/in-memory-jwt';
 
-import { useAuth } from "../auth/auth.component";
+import { useAuth } from '../auth/auth.component';
 
-const BACKEND_HOST =
-	(process.env.REACT_APP_BACKEND_PROTOCOL || "http") +
-	"://" +
-	(process.env.REACT_APP_BACKEND_HOST || window.document.location.hostname) +
-	(process.env.REACT_APP_BACKEND_PORT
-		? `:${process.env.REACT_APP_BACKEND_PORT}`
-		: "");
-const BACKEND_WS_HOST =
-	(process.env.REACT_APP_BACKEND_WS_PROTOCOL || "ws") +
-	"://" +
-	(process.env.REACT_APP_BACKEND_WS_HOST || window.document.location.hostname) +
-	(process.env.REACT_APP_BACKEND_WS_PORT
-		? `:${process.env.REACT_APP_BACKEND_WS_PORT}`
-		: "") +
-	"/websocket/location";
+const BACKEND_HOST = getBackEndHost();
+const BACKEND_WS_HOST = getBackEndWsHost();
 
 const urlMark = `${BACKEND_HOST}/api/mark/`;
 let socket;
@@ -31,11 +18,7 @@ const shareLocContext = createContext();
 
 export const ProvideShareLoc = ({ children }) => {
 	const shareLoc = useShareLocProvider();
-	return (
-		<shareLocContext.Provider value={shareLoc}>
-			{children}
-		</shareLocContext.Provider>
-	);
+	return <shareLocContext.Provider value={shareLoc}>{children}</shareLocContext.Provider>;
 };
 
 export const useShareLoc = () => {
@@ -46,11 +29,11 @@ const useShareLocProvider = () => {
 	const auth = useAuth();
 	const [positionData, setPositionData] = useState({
 		lat: 0,
-		lng: 0,
+		lng: 0
 	});
 	const [shareLocData, setShareLocData] = useState({
 		userId: 0,
-		lastMarkUpdate: 0,
+		lastMarkUpdate: 0
 	});
 
 	const isSocketConnected = () => {
@@ -73,29 +56,18 @@ const useShareLocProvider = () => {
 			userId: auth.user.key,
 			position: {
 				lat: latitude,
-				lng: longitude,
-			},
+				lng: longitude
+			}
 		};
 
-		// if(isSocketConnected()){
-		//     const values = {
-		//         commandType: 'CreateMark',
-		//         commandBody: { ...data }
-		//     }
-		//     socket.send(`NEW position ${latitude},
-		//     ${longitude},
-		//     ${timestamp}`);
-		// }else{
-		// }
-		await fetchUtils
-			.fetchJson(urlMark, {
-				method: "POST",
-				user: {
-					authenticated: true,
-				},
-				body: JSON.stringify({ ...data }),
-			})
-			setPositionData({ ...data.position });
+		await fetchJson(urlMark, {
+			method: 'POST',
+			user: {
+				authenticated: true
+			},
+			body: JSON.stringify({ ...data })
+		});
+		setPositionData({ ...data.position });
 	};
 
 	// const getLoc = async () => {
@@ -109,19 +81,19 @@ const useShareLocProvider = () => {
 
 	useEffect(() => {
 		socket = socketIOClient(BACKEND_WS_HOST, {
-			transports: ["websocket"],
+			transports: ['websocket']
 		});
 
-		socket.on("connect", (data) => {
+		socket.on('connect', data => {
 			// JSON.stringify({ token: inMemoryJWT.getToken() })
 			socket
-				.emit("authenticate", { token: `Bearer ${inMemoryJWT.getToken()}` })
-				.on("authenticated", () => {
+				.emit('authenticate', { token: `Bearer ${inMemoryJWT.getToken()}` })
+				.on('authenticated', () => {
 					//TODO make join groups
 					//do other things
-					console.log("authenticated");
+					console.log('authenticated');
 				})
-				.on("unauthorized", (msg) => {
+				.on('unauthorized', msg => {
 					socket.close();
 					console.log(`unauthorized: ${msg}`);
 					return;
@@ -129,18 +101,18 @@ const useShareLocProvider = () => {
 				});
 		});
 
-		socket.on("update-marks", (data) => {
-			console.log("update-marks", data);
+		socket.on('update-marks', data => {
+			console.log('update-marks', data);
 			setShareLocData({ userId: data.userId, lastMarkUpdate: Date.now() });
 		});
 
-		socket.on("connect_timeout", (timeout) => {
+		socket.on('connect_timeout', timeout => {
 			console.error(`connect_timeout timeout = ${timeout}`);
 		});
-		socket.on("error", (error) => {
+		socket.on('error', error => {
 			console.error(`error `, error);
 		});
-		socket.on("disconnect", (reason) => {
+		socket.on('disconnect', reason => {
 			console.error(`disconnect reason = `, reason);
 			// if (reason === 'io server disconnect') {
 			//   // the disconnection was initiated by the server, you need to reconnect manually
@@ -166,7 +138,7 @@ const useShareLocProvider = () => {
 	return {
 		isSocketConnected,
 		getLastMarkUpdate,
-		shareLoc,
+		shareLoc
 	};
 };
 // const ws01 = new WebSocket(BACKEND_WS_HOST); q
