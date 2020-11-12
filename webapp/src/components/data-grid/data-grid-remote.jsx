@@ -13,7 +13,7 @@ import filterFactory from "react-bootstrap-table2-filter";
 
 import { useQuery } from "react-query";
 
-import fetchUtils from "../../api/APIUtils";
+import { fetchJson } from "../../api/APIUtils";
 
 import useStructure from "./data-grid-structure.hook";
 
@@ -222,8 +222,7 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 
 		// const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST || "localhost";
 		let url = `${BACKEND_HOST}/api/${table}/${gridData.selectedRecID}`;
-		fetchUtils
-			.fetchJson(url, {
+		fetchJson(url, {
 				method: "DELETE",
 				user: {
 					authenticated: true,

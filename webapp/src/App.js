@@ -7,7 +7,7 @@ import { ReactQueryConfigProvider } from "react-query";
 import { ProvideAuth } from "./components/auth/auth.component";
 import MainPage from "./pages/main/main";
 
-import fetchUtils from "./api/APIUtils";
+import { fetchJson } from "./api/APIUtils";
 
 function App() { 
 
@@ -29,7 +29,7 @@ function App() {
 								authenticated: true
 							};
 
-							return fetchUtils.fetchJson(`${url}${urlParams}`, options);
+							return fetchJson(`${url}${urlParams}`, options);
 						}, 
 						refetchOnWindowFocus: false,
 						forceFetchOnMount: true
