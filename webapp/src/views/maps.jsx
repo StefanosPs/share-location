@@ -1,24 +1,20 @@
 import React, { useState }  from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Form } from "react-bootstrap";
-// react components used to create a google map
 
 import { useQuery } from "react-query";
 
-import { useShareLoc } from "../components/share-loc/share-loc.component";
+import { getBackEndHost } from '../api/APIUtils';
 
 import Map from "../components/map/map.component";
 import Loading from "../components/loading/loading.component";
 
-const BACKEND_HOST = (process.env.REACT_APP_BACKEND_PROTOCOL || 'http') + '://'+ (process.env.REACT_APP_BACKEND_HOST || window.document.location.hostname) + ((process.env.REACT_APP_BACKEND_PORT)? `:${process.env.REACT_APP_BACKEND_PORT}` : '' ) ;
-const GOOGLEMAPSKEY = process.env.REACT_APP_GOOGLEMAPSKEY
-	? process.env.REACT_APP_GOOGLEMAPSKEY
-	: "YOUR_API_KEY_HERE";
+const BACKEND_HOST = getBackEndHost();
 
 const MapsView = ({ ...prop }) => {
 
 	const history = useHistory();
-	const shareLoc = useShareLoc();
+	
 
 	// const location = history.location;
 	const historyParams =  (
@@ -33,17 +29,13 @@ const MapsView = ({ ...prop }) => {
 		...historyParams
 	});
 
-	// const lastMarkUpdate = shareLoc.getLastMarkUpdate();
-	// const url = `${BACKEND_HOST}/api/mark/${lastMarkUpdate.userId && lastMarkUpdate.userId }?timestamp=${lastMarkUpdate.timestamp?lastMarkUpdate.timestamp:0}`;
-	// lastMarkUpdate.?:;
 	
-
 	const {  data: res, isFetching } =  useQuery([
-		`${BACKEND_HOST}/api/mark/?timestamp=${shareLoc.getLastMarkUpdate()}`
+		`${BACKEND_HOST}/api/mark/`
 	]);
 	
 
-	if (isFetching) {
+	if (isFetching || !res) {
 		return <Loading />;
 	}
 
@@ -59,7 +51,7 @@ const MapsView = ({ ...prop }) => {
 			title: users[element.userId],
 			position: element.position,
 		};
-	});
+	}); 
 	
 	const handleChange = (event) => {
 		event.persist();
@@ -100,7 +92,6 @@ const MapsView = ({ ...prop }) => {
 			<Row>
 				<Col>
 					<Map
-						googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${GOOGLEMAPSKEY}`}
 						loadingElement={<div style={{ height: `100%` }} />}
 						containerElement={<div className="map-container" />}
 						mapElement={<div style={{ height: `100%` }} />}
