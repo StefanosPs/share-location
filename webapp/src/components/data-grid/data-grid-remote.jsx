@@ -38,17 +38,17 @@ const BACKEND_HOST = getBackEndHost();
 		</Col>
 	</Row>
 </Container> */
-const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => { 
+const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filter }) => { 
 
 	const history = useHistory();
-	const dataUrl = (refTable && match && match.params.refId)? `${BACKEND_HOST}/api/${refTable}/${match.params.refId}/${table}/`:`${BACKEND_HOST}/api/${table}/`;
-	const location = history.location;
+	const dataUrl = (refId)? `${BACKEND_HOST}/api/${refTable}/${refId}/${table}/`:`${BACKEND_HOST}/api/${table}/`;
+	// const dataUrl = (refTable && match && match.params.refId)? `${BACKEND_HOST}/api/${refTable}/${match.params.refId}/${table}/`:`${BACKEND_HOST}/api/${table}/`;
+	const {location} = history;
 
 	const historyParams =  (
 		history?.location?.state?.dataGrid
 	) ?
 		{ ...history.location.state.dataGrid }:{};
-
 
 
 	const useQueryParams = {};
@@ -67,6 +67,7 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 		sizePerPage: 10,
 		selectedRecID: 0,
 		loading: false,
+		filter,
 		...historyParams,
 		...useQueryParams,
 	});
@@ -78,6 +79,7 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 			sizePerPage: gridData.sizePerPage,
 			sortField: gridData.sortField,
 			sortOrder: gridData.sortOrder,
+			filter: gridData.filter
 		},
 	]);
 	
@@ -290,11 +292,14 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 RemoteAll.propTypes = {
 	columns: PropTypes.array.isRequired,
 	defaultSorted: PropTypes.array.isRequired,
-	table: PropTypes.string.isRequired,
-	location: PropTypes.object.isRequired,
+	table: PropTypes.string.isRequired, 
+	filter:  PropTypes.shape({
+		and: PropTypes.array,
+		or: PropTypes.array
+	})
 };
 
-export const DataGrid = ({ location, refTable, table , ...props }) => {
+export const DataGrid = ({ refTable, refId, table ,  ...props }) => {
 	const { isLoading, columns, sorted } = useStructure(table);
 
 	if (isLoading) {
@@ -313,12 +318,17 @@ export const DataGrid = ({ location, refTable, table , ...props }) => {
 						columns={columns}
 						defaultSorted={sorted}
 						refTable={refTable}
-						table={table}
-						location={location} 
+						refId={refId}
+						table={table} 
 						{...props}
 					/>
 				</Col>
 			</Row>
 		</Container>
 	);
+};
+DataGrid.propTypes = { 
+	refTable: PropTypes.string,
+	refId: PropTypes.number,
+	table: PropTypes.string.isRequired
 };
