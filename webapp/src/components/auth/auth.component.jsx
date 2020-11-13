@@ -4,7 +4,9 @@ import Loading from "../loading/loading.component";
 
 import AuthProvider from "../../authentication";
 
-const BACKEND_HOST = (process.env.REACT_APP_BACKEND_PROTOCOL || 'http') + '://'+ (process.env.REACT_APP_BACKEND_HOST || window.document.location.hostname) + ((process.env.REACT_APP_BACKEND_PORT)? `:${process.env.REACT_APP_BACKEND_PORT}` : '' ) ;
+import { getBackEndHost } from '../../api/APIUtils';
+
+const BACKEND_HOST = getBackEndHost();
 
 
 // Add your Firebase credentials

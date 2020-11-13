@@ -13,7 +13,7 @@ import filterFactory from "react-bootstrap-table2-filter";
 
 import { useQuery } from "react-query";
 
-import { fetchJson } from "../../api/APIUtils";
+import { fetchJson, getBackEndHost } from "../../api/APIUtils";
 
 import useStructure from "./data-grid-structure.hook";
 
@@ -30,7 +30,7 @@ const defaultSelectRow = {
 
 const { SearchBar } = Search;
 
-const BACKEND_HOST = (process.env.REACT_APP_BACKEND_PROTOCOL || 'http') + '://'+ (process.env.REACT_APP_BACKEND_HOST || window.document.location.hostname) + ((process.env.REACT_APP_BACKEND_PORT)? `:${process.env.REACT_APP_BACKEND_PORT}` : '' ) ;
+const BACKEND_HOST = getBackEndHost();
 
 /* <Container fluid="xl" className="data-grid">
 	<Row>

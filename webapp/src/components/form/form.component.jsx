@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Alert, ButtonToolbar, Button, Container, Row, Col } from 'react-bootstrap';
 
-import { fetchJson } from '../../api/APIUtils';
+import { fetchJson, getBackEndHost } from '../../api/APIUtils';
 
 import Loading from '../loading/loading.component';
 
@@ -49,11 +49,7 @@ import FormSelect from './control/select/select';
 						<ActionNav insert={insertFn} update={updateFn} remove={removeFn} />
 					</Navbar>
   */
-const BACKEND_HOST =
-	(process.env.REACT_APP_BACKEND_PROTOCOL || 'http') +
-	'://' +
-	(process.env.REACT_APP_BACKEND_HOST || window.document.location.hostname) +
-	(process.env.REACT_APP_BACKEND_PORT ? `:${process.env.REACT_APP_BACKEND_PORT}` : '');
+const BACKEND_HOST = getBackEndHost();
 
 const DataForm = ({ table, data, newRec, relData, ...props }) => {
 	const history = useHistory();
