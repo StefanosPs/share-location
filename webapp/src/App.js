@@ -7,7 +7,9 @@ import { ReactQueryConfigProvider } from "react-query";
 import { ProvideAuth } from "./components/auth/auth.component";
 import MainPage from "./pages/main/main";
 
-import { fetchJson } from "./api/APIUtils";
+import { fetchJson, urlQueryBuilder } from "./api/APIUtils";
+
+
 
 function App() { 
 
@@ -18,8 +20,11 @@ function App() {
 					queries: {
 						queryFn: (url, params = {}, options = {}) => { 
 							let urlParams = '?';
+							
 							if(params){
-								urlParams += new URLSearchParams(params);
+								// console.log('queryUrlEncode', queryUrlEncode(params));
+								urlParams += urlQueryBuilder(params);
+								console.log('queryUrlEncode', urlParams);
 							}
 							if (!options.headers) {
 								options.headers = new Headers({ Accept: "application/json" });
