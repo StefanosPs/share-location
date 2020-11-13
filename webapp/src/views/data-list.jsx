@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import {
 	Container,
 	Row,
@@ -6,9 +7,8 @@ import {
 } from "react-bootstrap";
 import DataGrid from "../components/data-grid";
 
-const DataList = ({ title, ...props }) => { 
+const DataList = ({ title, refTable, refId, table, ...props }) => { 
 
-	
     //TODO Add columns, Title and action Request
 	return (
 		<Container fluid className="px-md-4">
@@ -19,19 +19,18 @@ const DataList = ({ title, ...props }) => {
             </Row> 
 			<Row>
 				<Col>
-					<DataGrid {...props} />
+					<DataGrid table={table} refTable={refTable} refId={refId} {...props} />
 				</Col>
 			</Row>
 		</Container>
 	);
 };
 
-export default DataList;
+DataList.propTypes = {
+	title: PropTypes.string.isRequired,
+	table: PropTypes.string.isRequired,
+	refTable: PropTypes.string,
+	refId: PropTypes.number 
+};
 
-/* <Col className="d-none d-md-block " sm={false}>
-    <ButtonToolbar className="justify-content-end" aria-label="Toolbar with button groups">
-        <ButtonGroup aria-label="First group">
-            <Button className="mr-2" >1</Button> <Button className="mr-2" >2</Button>
-        </ButtonGroup>
-    </ButtonToolbar>
-</Col> */
+export default DataList;
