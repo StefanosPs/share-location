@@ -79,8 +79,7 @@ const DataForm = ({ table, data, newRec, relData, ...props }) => {
 			method = 'PUT';
 			url = `${BACKEND_HOST}/api/${table}/${values['id']}`;
 		}
-		fetchUtils
-			.fetchJson(url, {
+		fetchJson(url, {
 				method,
 				user: {
 					authenticated: true
