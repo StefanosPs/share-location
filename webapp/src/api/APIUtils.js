@@ -79,7 +79,6 @@ export const getBackEndWsHost = () => {
 };
 
 export const urlQueryBuilder = (params, key) => {
-	console.log(typeof params);
 	if( Array.isArray(params)){
 		return params.map((value, index) => {
 			return urlQueryBuilder(value, `${key}[${index}]`);
