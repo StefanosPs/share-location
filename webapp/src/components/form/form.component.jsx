@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { Form, Alert, ButtonToolbar, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, ButtonToolbar, Button, Container, Row, Col } from 'react-bootstrap';
 
 import { fetchJson, getBackEndHost } from '../../api/APIUtils';
 
 import Loading from '../loading/loading.component';
+import DisplayError from '../display-error/display-error.component'
 
 import useForm from './form.hook';
 import useStructure from './form-structure.hook';
@@ -13,47 +15,10 @@ import ActionNav from './form-nav-actions';
 import FormConrol from './control/control';
 import FormSelect from './control/select/select';
 
-/**
- * <input type="button">
-<input type="checkbox">
-<input type="color">
-<input type="date">
-<input type="datetime-local">
-<input type="email">
-<input type="file">
-<input type="hidden">
-<input type="image">
-<input type="month">
-<input type="number">
-<input type="password">
-<input type="radio">
-<input type="range">
-<input type="reset">
-<input type="search">
-<input type="submit">
-<input type="tel">
-<input type="text">
-<input type="time">
-<input type="url">
-<input type="week">
- */
-
-/**
-<Navbar collapseOnSelect expand="md">
-						<Form inline>
-							<div style={{ padding: "0.5rem 1rem" }}>
-								<SearchBar {...toolkitprops.searchProps} />
-							</div>
-						</Form>
-
-						<ActionNav insert={insertFn} update={updateFn} remove={removeFn} />
-					</Navbar>
-  */
 const BACKEND_HOST = getBackEndHost();
 
-const DataForm = ({ table, data, newRec, relData, ...props }) => {
+const FormMain = ({ table, data, newRec, relData, actionNav, ...props }) => {
 	const history = useHistory();
-	const location = history.location;
 	const { isLoading, fields, validationFields } = useStructure(table);
 	const { values, errors, handleChange, handleSubmit } = useForm(
 		submitFunction,
@@ -61,10 +26,6 @@ const DataForm = ({ table, data, newRec, relData, ...props }) => {
 		data
 	);
 	const [errorLogService, setErrorLogService] = useState([]);
-
-	if (isLoading) {
-		return <Loading />;
-	}
 
 	async function submitFunction() {
 		// console.log("Here");
@@ -76,12 +37,12 @@ const DataForm = ({ table, data, newRec, relData, ...props }) => {
 			url = `${BACKEND_HOST}/api/${table}/${values['id']}`;
 		}
 		fetchJson(url, {
-				method,
-				user: {
-					authenticated: true
-				},
-				body: JSON.stringify(values)
-			})
+			method,
+			user: {
+				authenticated: true
+			},
+			body: JSON.stringify(values)
+		})
 			.then(res => {
 				// setErrorLogService([]);
 				//TODO push
@@ -116,29 +77,14 @@ const DataForm = ({ table, data, newRec, relData, ...props }) => {
 		});
 		return errorAr;
 	}
+	if (isLoading) {
+		return <Loading />;
+	}
 	const fieldKeys = Object.keys(fields);
 	return (
 		<Container fluid>
 			<Row>
-				<Col>
-					<ActionNav
-						buttons={[
-							{
-								title: `Connections`,
-								icon: null,
-								variant: 'info',
-								onClick: () => {
-									//TODO alert chanches will be lost
-									console.log(location.pathname);
-									const url = `${location.pathname}/connections`;
-									history.push({
-										pathname: url
-									});
-								}
-							}
-						]}
-					/>
-				</Col>
+				<Col>{actionNav && <ActionNav buttons={actionNav} />}</Col>
 			</Row>
 			<Row>
 				<Col>
@@ -146,9 +92,9 @@ const DataForm = ({ table, data, newRec, relData, ...props }) => {
 						{Array.isArray(errorLogService) &&
 							errorLogService.length > 0 &&
 							errorLogService.map(el => (
-								<Alert variant="danger" dismissible>
+								<DisplayError>
 									{el.message}
-								</Alert>
+								</DisplayError>
 							))}
 						{fieldKeys.map(index => {
 							const el = fields[index];
@@ -197,7 +143,8 @@ const DataForm = ({ table, data, newRec, relData, ...props }) => {
 								variant="danger"
 								className="float-right ml-auto"
 								type="submit"
-								onClick={() => {
+								onClick={e => {
+									e.preventDefault();
 									history.goBack();
 								}}
 							>
@@ -211,4 +158,11 @@ const DataForm = ({ table, data, newRec, relData, ...props }) => {
 	);
 };
 
-export default DataForm;
+FormMain.propTypes = {
+	data: PropTypes.object.isRequired,
+	newRec: PropTypes.bool.isRequired,
+	relData: PropTypes.objectOf(PropTypes.array),
+	actionNav: PropTypes.arrayOf(PropTypes.object)
+};
+
+export default FormMain;

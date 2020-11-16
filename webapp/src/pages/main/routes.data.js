@@ -40,7 +40,7 @@ export const routes = {
 					name: 'My Profile',
 					icon: 'pe-7s-user',
 					component: props => {
-						return <MyProfile title={`My Profile`} />;
+						return <MyProfile title={`My Profile`}  {...props} />;
 					},
 					isLink: true,
 					isBasicRedirect: false,
@@ -61,7 +61,29 @@ export const routes = {
 					icon: 'pe-7s-user',
 					component: props => {
 						const id = props.match.params.id ? parseInt(props.match.params.id, 10) : 0;
-						return <DataForm title={`User Edit`} table="user" id={id} newRec={false} {...props} />;
+						return (
+							<DataForm
+								title={`User Edit`}
+								table="user"
+								id={+id}
+								newRec={false}
+								actionNav={[
+									{
+										title: `Connections`,
+										icon: null,
+										variant: 'info',
+										onClick: () => {
+											const { history, location } = props;
+											const url = `${location.pathname}/connections`;
+											history.push({
+												pathname: url
+											});
+										}
+									}
+								]}
+								{...props}
+							/>
+						);
 					},
 					isLink: true,
 					isBasicRedirect: false,
@@ -91,7 +113,7 @@ export const routes = {
 							<DataList
 								title={`User Connections List`}
 								refTable="user"
-								refId={refId}
+								refId={+refId}
 								table="connections"
 								{...props}
 							/>
@@ -109,14 +131,15 @@ export const routes = {
 						const {
 							params: { refId, id }
 						} = match;
+
 						return (
 							<DataForm
 								title={`User Connections Edit`}
 								refTable="user"
-								refId={refId}
+								refId={+refId}
 								table="connections"
 								newRec={false}
-								id={id}
+								id={+id}
 								{...props}
 							/>
 						);
@@ -137,7 +160,7 @@ export const routes = {
 							<DataForm
 								title={`New User Connections`}
 								refTable="user"
-								refId={refId}
+								refId={+refId}
 								id={0}
 								newRec={true}
 								table="connections"
