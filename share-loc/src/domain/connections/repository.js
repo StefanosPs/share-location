@@ -40,12 +40,12 @@ function sanitizedUser({ id, fullName }) {
  * @param {number} id - The id of the connection
  * @returns {number}
  */
-export async function countConnection(id) {
+export async function countConnection(id, params) {
 	if (!(this && this.countConnection)) {
 		throw new Error(global.__getDictionary('__ERROR_TROW_BIND_FAILED__'));
 	}
 
-	const cnt = await this.countConnection(id);
+	const cnt = await this.countConnection(id, params);
 	return cnt;
 }
 /**

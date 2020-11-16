@@ -3,13 +3,16 @@ import GetConnectionCommand from 'domain/connections/get/command';
 import GetValidObserverCommand from 'domain/connections/get-valid-observer/command';
 
 export default async function getConnection(ctx) {
-	const {params, request} = ctx;
+	const { params, request } = ctx;
 
+	// console.dir(request.query);
+	// console.dir(request.query.filters.and);
 	const command = GetConnectionCommand.buildFromJSON({
-		payloadUser: {...request.jwtPayload.user},
+		payloadUser: { ...request.jwtPayload.user },
 		...params,
 		...request.query
 	});
+
 	try {
 		const connections = await ctx.commandBus.execute(command);
 		if (connections.data && connections.data.length < 1) {
@@ -42,10 +45,10 @@ export default async function getConnection(ctx) {
 }
 
 export async function gerValidObserver(ctx) {
-	const {params, request} = ctx;
+	const { params, request } = ctx;
 
 	const command = GetValidObserverCommand.buildFromJSON({
-		payloadUser: {...request.jwtPayload.user},
+		payloadUser: { ...request.jwtPayload.user },
 		...params,
 		...request.query
 	});
