@@ -77,7 +77,9 @@ const Map = ({ markers, defaultCenter, ...props }) => {
 
 		}
 
-		return () => map.remove();
+		return () => {
+			if(map) map.remove()
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
