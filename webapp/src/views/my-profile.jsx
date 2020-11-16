@@ -18,16 +18,16 @@ const MyProfile = ({ title, ...props }) => {
 					<Container>
 						<Row>
 							<Col>
-								<DataList title={`Active Connections`} refTable="user" refId={user.key} table="connections" filter={{
+								<DataList title={`Active Connections`} refTable="user" refId={user.key} table="connections" filters={{
 									'and': [
-										{'status': {'equals' : 'ACTIVE'}}
+										{'status': {'eq' : 'ACTIVE'}}
 									]
 								}} {...props}   />
 							</Col>
 						</Row> 
 						<Row>
 							<Col>
-								<DataList title={`Pedding Connections`} refTable="user" refId={user.key} table="connections" filter={{
+								<DataList title={`Pedding Connections`} refTable="user" refId={user.key} table="connections" filters={{
 									'and': [
 										{'status': {'eq' : 'PEDDING'}}
 									]
