@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { Container, Row, Col, Navbar, Form, Table, Alert } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Form, Table } from "react-bootstrap";
 
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
@@ -12,12 +12,14 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import filterFactory from "react-bootstrap-table2-filter";
 
 import { useQuery } from "react-query";
+import { useToasts } from 'react-toast-notifications'
 
 import { fetchJson, getBackEndHost } from "../../api/APIUtils";
 
 import useStructure from "./data-grid-structure.hook";
 
-import Loading from "../../components/loading/loading.component";
+import Loading from "../loading/loading.component";
+import DisplayError from "../display-error/display-error.component"
 import ActionNav from "./data-grid-nav-actions";
 
 // const cellEditProps = {
@@ -38,11 +40,11 @@ const BACKEND_HOST = getBackEndHost();
 		</Col>
 	</Row>
 </Container> */
-const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filter }) => { 
+const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filters }) => { 
 
-	const history = useHistory();
 	const dataUrl = (refId)? `${BACKEND_HOST}/api/${refTable}/${refId}/${table}/`:`${BACKEND_HOST}/api/${table}/`;
-	// const dataUrl = (refTable && match && match.params.refId)? `${BACKEND_HOST}/api/${refTable}/${match.params.refId}/${table}/`:`${BACKEND_HOST}/api/${table}/`;
+	const endPoint = (refId)? `/admin/${refTable}/${refId}/${table}/`:`/admin/${table}/`;
+	const history = useHistory();
 	const {location} = history;
 
 	const historyParams =  (
@@ -67,11 +69,11 @@ const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filter }) =
 		sizePerPage: 10,
 		selectedRecID: 0,
 		loading: false,
-		filter,
+		filters,
 		...historyParams,
 		...useQueryParams,
 	});
-
+	const { addToast } = useToasts()
 	const { data: res, error, isFetching, clear } = useQuery([
 		dataUrl,
 		{
@@ -79,12 +81,12 @@ const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filter }) =
 			sizePerPage: gridData.sizePerPage,
 			sortField: gridData.sortField,
 			sortOrder: gridData.sortOrder,
-			filter: gridData.filter
+			filters: gridData.filters
 		},
 	]);
 	
 	if(error){ 
-		return <Alert variant="danger" dismissible>{error}</Alert>;
+		return <DisplayError>{error}</DisplayError>;
 	}
 
 	if (isFetching || gridData.loading) {
@@ -104,6 +106,15 @@ const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filter }) =
 			}
 		}
 	});
+
+	const displayErrorToast = (message) => {
+		addToast(message, {
+			appearance: 'error',
+			autoDismiss: true,
+			autoDismissTimeout: 5000
+		  });
+		  return;
+	}
 
 	const onSizePerPageChange = (sizePerPage, page) => {
 		let urlParams = "?";
@@ -196,25 +207,21 @@ const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filter }) =
 		}
 	};
 
-	const insertFn = () => {
-		if (!location.pathname) {
-			throw new Error("Underfunded path name");
-		}
-		history.push(`${location.pathname}/new`);
+	const insertFn = () => { 
+		history.push(`${endPoint}new`);
 	};
-	const updateFn = () => {
-		if (!location.pathname) {
-			throw new Error("Underfunded path name");
-		}
+	const updateFn = () => { 
 		if (!gridData.selectedRecID) {
-			throw new Error("Please select rec");
+			displayErrorToast("Select record first");
+			return false;
 		}
 
-		history.push(`${location.pathname}/${gridData.selectedRecID}`);
+		history.push(`${endPoint}${gridData.selectedRecID}`);
 	};
 	const removeFn = () => {
 		if (!gridData.selectedRecID) {
-			throw new Error("Please select rec");
+			displayErrorToast("Select record first");
+			return false;
 		}
  
 		setGridData(prevState => {
@@ -223,7 +230,7 @@ const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filter }) =
 		});
 
 		// const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST || "localhost";
-		let url = `${BACKEND_HOST}/api/${table}/${gridData.selectedRecID}`;
+		let url = `${dataUrl}${gridData.selectedRecID}`;
 		fetchJson(url, {
 				method: "DELETE",
 				user: {
