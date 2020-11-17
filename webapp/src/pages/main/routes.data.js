@@ -15,7 +15,7 @@ export const routes = {
 			component: props => <h1>Dashboard</h1>,
 			isLink: true,
 			isBasicRedirect: true,
-			displayAtSlidebar: true
+			displayAtSlideBar: true
 		},
 		shareloc: {
 			name: 'Share Location',
@@ -27,7 +27,7 @@ export const routes = {
 					component: props => <Maps {...props} />,
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: true
+					displayAtSlideBar: true
 				}
 			}
 		},
@@ -44,7 +44,7 @@ export const routes = {
 					},
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: true
+					displayAtSlideBar: true
 				},
 				userList: {
 					path: '/user',
@@ -53,7 +53,7 @@ export const routes = {
 					component: props => <DataList title={`User List`} table="user" {...props} />,
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: true
+					displayAtSlideBar: true
 				},
 				userEdit: {
 					path: '/user/:id',
@@ -87,7 +87,7 @@ export const routes = {
 					},
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: false
+					displayAtSlideBar: false
 				},
 				userNew: {
 					path: '/user/new',
@@ -98,7 +98,7 @@ export const routes = {
 					),
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: false
+					displayAtSlideBar: false
 				},
 
 				userConnectionsList: {
@@ -121,7 +121,7 @@ export const routes = {
 					},
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: false
+					displayAtSlideBar: false
 				},
 				userConnectionsEdit: {
 					path: '/user/:refId/connections/:id',
@@ -146,7 +146,7 @@ export const routes = {
 					},
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: false
+					displayAtSlideBar: false
 				},
 				userConnectionsNew: {
 					path: '/user/:refId/connections/new',
@@ -170,7 +170,7 @@ export const routes = {
 					},
 					isLink: true,
 					isBasicRedirect: false,
-					displayAtSlidebar: false
+					displayAtSlideBar: false
 				}
 			}
 		}

@@ -17,7 +17,11 @@ import FormSelect from './control/select/select';
 
 const BACKEND_HOST = getBackEndHost();
 
-const FormMain = ({ table, data, newRec, relData, actionNav, ...props }) => {
+const FormMain = ({ table, data, newRec, isReadOnly, relData, actionNav, ...props }) => {
+
+
+	console.log(`FormMain:: ${isReadOnly} --- `)
+
 	const history = useHistory();
 	const { isLoading, fields, validationFields } = useStructure(table);
 	const { values, errors, handleChange, handleSubmit } = useForm(
@@ -112,7 +116,7 @@ const FormMain = ({ table, data, newRec, relData, actionNav, ...props }) => {
 														name={el.dataField}
 														values={values}
 														handleChange={handleChange}
-														readOnly={newRec ? !!el.readOnlyNewRec : !!el.readOnly}
+														readOnly={isReadOnly? isReadOnly :  newRec ? !!el.readOnlyNewRec : !!el.readOnly}
 														error={errors[el.dataField]}
 														relData={relData}
 													/>
@@ -125,7 +129,7 @@ const FormMain = ({ table, data, newRec, relData, actionNav, ...props }) => {
 														name={el.dataField}
 														values={values}
 														handleChange={handleChange}
-														readOnly={newRec ? !!el.readOnlyNewRec : !!el.readOnly}
+														readOnly={isReadOnly? isReadOnly : newRec ? !!el.readOnlyNewRec : !!el.readOnly}
 														error={errors[el.dataField]}
 													/>
 												);
@@ -136,9 +140,9 @@ const FormMain = ({ table, data, newRec, relData, actionNav, ...props }) => {
 						})}
 
 						<ButtonToolbar>
-							<Button variant="primary" type="submit">
+							{!isReadOnly && <Button variant="primary" type="submit">
 								Submit
-							</Button>
+							</Button>}
 							<Button
 								variant="danger"
 								className="float-right ml-auto"
@@ -157,12 +161,15 @@ const FormMain = ({ table, data, newRec, relData, actionNav, ...props }) => {
 		</Container>
 	);
 };
-
+FormMain.defaultProps = {
+	isReadOnly: false
+}
 FormMain.propTypes = {
 	data: PropTypes.object.isRequired,
 	newRec: PropTypes.bool.isRequired,
+	isReadOnly: PropTypes.bool,
 	relData: PropTypes.objectOf(PropTypes.array),
-	actionNav: PropTypes.arrayOf(PropTypes.object)
+	actionNav: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default FormMain;

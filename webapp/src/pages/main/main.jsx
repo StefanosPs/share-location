@@ -3,6 +3,7 @@ import React from 'react';
 import { Container, Row } from 'react-bootstrap';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
+import ErrorBoundary from '../../components/error-boundary/error-boundary.component';
 import { useAuth } from '../../components/auth/auth.component';
 import { ProvideShareLoc } from '../../components/share-loc/share-loc.component';
 
@@ -45,7 +46,7 @@ const getRoutes = (key, routes, href) => {
 					key={key}
 					path={`${href}`}
 					render={props => {
-						return <routes.component {...props} />;
+						return (<ErrorBoundary ><routes.component {...props} /></ErrorBoundary>);
 					}}
 				/>
 			);
@@ -60,7 +61,7 @@ const getRoutes = (key, routes, href) => {
 	return retArr;
 };
 
-const MainPage = props => {
+const MainPage = () => {
 	const auth = useAuth();
 
 	if (!auth.user) {
@@ -71,11 +72,10 @@ const MainPage = props => {
 		<ProvideShareLoc>
 			<Container fluid>
 				<Row>
-					<SlideBar items={routes} location={props.location.pathname} />
+					<SlideBar items={routes} />
 					<main className="">
-					
 						<Header signOut={auth.signOut} userObj={auth.user} />
-						<Switch>{getRoutes('', routes, '')}</Switch> 
+						<Switch>{getRoutes('', routes, '')}</Switch>
 					</main>
 				</Row>
 			</Container>

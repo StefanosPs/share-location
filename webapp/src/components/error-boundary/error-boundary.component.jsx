@@ -1,7 +1,10 @@
 import React from 'react';
 import DisplayError from '../display-error/display-error.component'
+
+import PermissionError from '../../api/PermissionError'
+
 export const errorHandler = (error, errorInfo) => {
-	alert('Global error!');
+	// alert('Global error!');
 	console.error(error);
 	//todo inform server
 }
@@ -23,18 +26,19 @@ class ErrorBoundary extends React.Component {
 		// You can also log error messages to an error reporting service here
 	}
 
+
 	render() {
-        console.log(this.state.errorInfo);
-		if (this.state.errorInfo) {
-			// Error path
+  		if (this.state.error) {
+			if(this.state.error instanceof PermissionError){
+				return (<DisplayError>
+					{this.state.error.getMessage()}
+					</DisplayError> );
+			}
+
 			//TODO Alert
-			return (
-				<DisplayError>
-					{this.state.error && this.state.error.toString()}
-					<br />
-					{this.state.errorInfo.componentStack}
-				</DisplayError>
-			);
+			return (<DisplayError>
+				{this.state.error && this.state.error.message}
+				</DisplayError> );
 		}
 		// Normally, just render children
 		return this.props.children;
