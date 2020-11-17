@@ -7,6 +7,7 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import { ProvideAuth } from './components/auth/auth.component';
 import { PermissionProvider } from './components/permission/permission.component';
+import { SlideBarProvide } from './components/slide-bar/slide-bar.component'
 import MainPage from './pages/main/main';
 
 import { fetchJson, urlQueryBuilder } from './api/APIUtils';
@@ -40,9 +41,11 @@ function App() {
 			>
 				<PermissionProvider>
 					<ToastProvider>
-						<BrowserRouter>
-							<Route path="/" render={props => <MainPage {...props} />} />
-						</BrowserRouter>
+						<SlideBarProvide>
+							<BrowserRouter>
+								<Route path="/" render={props => <MainPage {...props} />} />
+							</BrowserRouter>
+						</SlideBarProvide>
 					</ToastProvider>
 				</PermissionProvider>
 			</ReactQueryConfigProvider>
