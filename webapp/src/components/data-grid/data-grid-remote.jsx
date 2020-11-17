@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { Container, Row, Col, Navbar, Form, Table, Alert } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Form, Table } from "react-bootstrap";
 
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
@@ -12,12 +12,14 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import filterFactory from "react-bootstrap-table2-filter";
 
 import { useQuery } from "react-query";
+import { useToasts } from 'react-toast-notifications'
 
-import fetchUtils from "../../api/APIUtils";
+import { fetchJson, getBackEndHost } from "../../api/APIUtils";
 
 import useStructure from "./data-grid-structure.hook";
 
-import Loading from "../../components/loading/loading.component";
+import Loading from "../loading/loading.component";
+import DisplayError from "../display-error/display-error.component"
 import ActionNav from "./data-grid-nav-actions";
 
 // const cellEditProps = {
@@ -30,7 +32,7 @@ const defaultSelectRow = {
 
 const { SearchBar } = Search;
 
-const BACKEND_HOST = (process.env.REACT_APP_BACKEND_PROTOCOL || 'http') + '://'+ (process.env.REACT_APP_BACKEND_HOST || window.document.location.hostname) + ((process.env.REACT_APP_BACKEND_PORT)? `:${process.env.REACT_APP_BACKEND_PORT}` : '' ) ;
+const BACKEND_HOST = getBackEndHost();
 
 /* <Container fluid="xl" className="data-grid">
 	<Row>
@@ -38,17 +40,17 @@ const BACKEND_HOST = (process.env.REACT_APP_BACKEND_PROTOCOL || 'http') + '://'+
 		</Col>
 	</Row>
 </Container> */
-const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => { 
+const RemoteAll = ({ columns, defaultSorted, refTable, refId, table, filters }) => { 
 
+	const dataUrl = (refId)? `${BACKEND_HOST}/api/${refTable}/${refId}/${table}/`:`${BACKEND_HOST}/api/${table}/`;
+	const endPoint = (refId)? `/admin/${refTable}/${refId}/${table}/`:`/admin/${table}/`;
 	const history = useHistory();
-	const dataUrl = (refTable && match && match.params.refId)? `${BACKEND_HOST}/api/${refTable}/${match.params.refId}/${table}/`:`${BACKEND_HOST}/api/${table}/`;
-	const location = history.location;
+	const {location} = history;
 
 	const historyParams =  (
 		history?.location?.state?.dataGrid
 	) ?
 		{ ...history.location.state.dataGrid }:{};
-
 
 
 	const useQueryParams = {};
@@ -67,10 +69,11 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 		sizePerPage: 10,
 		selectedRecID: 0,
 		loading: false,
+		filters,
 		...historyParams,
 		...useQueryParams,
 	});
-
+	const { addToast } = useToasts()
 	const { data: res, error, isFetching, clear } = useQuery([
 		dataUrl,
 		{
@@ -78,11 +81,12 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 			sizePerPage: gridData.sizePerPage,
 			sortField: gridData.sortField,
 			sortOrder: gridData.sortOrder,
+			filters: gridData.filters
 		},
 	]);
 	
 	if(error){ 
-		return <Alert variant="danger" dismissible>{error}</Alert>;
+		return <DisplayError>{error}</DisplayError>;
 	}
 
 	if (isFetching || gridData.loading) {
@@ -102,6 +106,15 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 			}
 		}
 	});
+
+	const displayErrorToast = (message) => {
+		addToast(message, {
+			appearance: 'error',
+			autoDismiss: true,
+			autoDismissTimeout: 5000
+		  });
+		  return;
+	}
 
 	const onSizePerPageChange = (sizePerPage, page) => {
 		let urlParams = "?";
@@ -194,25 +207,21 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 		}
 	};
 
-	const insertFn = () => {
-		if (!location.pathname) {
-			throw new Error("Underfunded path name");
-		}
-		history.push(`${location.pathname}/new`);
+	const insertFn = () => { 
+		history.push(`${endPoint}new`);
 	};
-	const updateFn = () => {
-		if (!location.pathname) {
-			throw new Error("Underfunded path name");
-		}
+	const updateFn = () => { 
 		if (!gridData.selectedRecID) {
-			throw new Error("Please select rec");
+			displayErrorToast("Select record first");
+			return false;
 		}
 
-		history.push(`${location.pathname}/${gridData.selectedRecID}`);
+		history.push(`${endPoint}${gridData.selectedRecID}`);
 	};
 	const removeFn = () => {
 		if (!gridData.selectedRecID) {
-			throw new Error("Please select rec");
+			displayErrorToast("Select record first");
+			return false;
 		}
  
 		setGridData(prevState => {
@@ -221,9 +230,8 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 		});
 
 		// const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST || "localhost";
-		let url = `${BACKEND_HOST}/api/${table}/${gridData.selectedRecID}`;
-		fetchUtils
-			.fetchJson(url, {
+		let url = `${dataUrl}${gridData.selectedRecID}`;
+		fetchJson(url, {
 				method: "DELETE",
 				user: {
 					authenticated: true,
@@ -291,11 +299,14 @@ const RemoteAll = ({ columns, defaultSorted, refTable, table, match }) => {
 RemoteAll.propTypes = {
 	columns: PropTypes.array.isRequired,
 	defaultSorted: PropTypes.array.isRequired,
-	table: PropTypes.string.isRequired,
-	location: PropTypes.object.isRequired,
+	table: PropTypes.string.isRequired, 
+	filter:  PropTypes.shape({
+		and: PropTypes.array,
+		or: PropTypes.array
+	})
 };
 
-export const DataGrid = ({ location, refTable, table , ...props }) => {
+export const DataGrid = ({ refTable, refId, table ,  ...props }) => {
 	const { isLoading, columns, sorted } = useStructure(table);
 
 	if (isLoading) {
@@ -314,12 +325,17 @@ export const DataGrid = ({ location, refTable, table , ...props }) => {
 						columns={columns}
 						defaultSorted={sorted}
 						refTable={refTable}
-						table={table}
-						location={location} 
+						refId={refId}
+						table={table} 
 						{...props}
 					/>
 				</Col>
 			</Row>
 		</Container>
 	);
+};
+DataGrid.propTypes = { 
+	refTable: PropTypes.string,
+	refId: PropTypes.number,
+	table: PropTypes.string.isRequired
 };

@@ -11,6 +11,7 @@ import cors from '@koa/cors';
 import {initPassport} from '../authentication/koa-router';
 import errorHandler from './middleware/errorHandler';
 import setLang from './middleware/setLang';
+import validateRequest from './middleware/validateRequest';
 import health from './health';
 import wsAttach from './ws-attach';
 import api from './api';
@@ -63,6 +64,8 @@ export default function createServer({commandBus} = {}) {
 	// handle errors
 	app.use(errorHandler);
 	app.use(setLang);
+
+	app.use(validateRequest);
 
 	// parse application/json
 	app.use(

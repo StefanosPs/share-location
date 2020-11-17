@@ -1,7 +1,10 @@
 /* eslint-disable no-param-reassign */
 import IO from 'koa-socket-2';
 
-import {ensureAuthenticated} from '../authentication/koa-router';
+import GetConnectionCommand from 'domain/connections/get/command';
+
+import { ensureAuthenticated } from '../authentication/koa-router';
+import logger from 'koa-pino-logger';
 
 const wsAttach = app => {
 	const location = new IO({
@@ -20,10 +23,21 @@ const wsAttach = app => {
 			try {
 				const jwtPayload = await ensureAuthenticated(data.token);
 				if (jwtPayload) {
-					// console.log('authenticate::jwtPayload', jwtPayload);
 					socket.jwtPayload = jwtPayload;
-					socket.emit('authenticated');
 
+					const command = GetConnectionCommand.buildFromJSON({
+						payloadUser: { ...jwtPayload.user }
+					});
+					const connections = await app.context.commandBus.execute(command);
+
+					if (connections && connections.data) {
+						socket.observes = connections.data.map(el => {
+							return el.observeUserId;
+						});
+					}
+					console.log('socket.observes ', socket.observes);
+
+					socket.emit('authenticated');
 					return;
 				}
 			} catch (error) {
@@ -44,11 +58,17 @@ const wsAttach = app => {
 		console.log(ctx.data, data);
 	});
 	// console.log(app.context.commandBus.registry.eventBus);
-	const {eventBus} = app.context.commandBus.registry;
+	const { eventBus } = app.context.commandBus.registry;
 	eventBus.on('createMark', data => {
-		// console.log('broadcast');
-		// console.log(data);
-		location.broadcast('update-marks', data);
+		if (!data.userId) {
+			logger.error(`on createMark wrong data `, data);
+			return null;
+		}
+		location.connections.forEach(socket => {
+			if (socket.observes.includes(data.userId)) {
+				socket.emit('update-marks', data);
+			}
+		});
 	});
 
 	return app;

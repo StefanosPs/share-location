@@ -47,7 +47,6 @@ export default class GetConnectionHandler {
 			};
 		}
 		const params = {};
-
 		if (command.page) {
 			params.page = command.page;
 		}
@@ -61,12 +60,14 @@ export default class GetConnectionHandler {
 		if (command.watcherUserId) {
 			params.where = { watcherUserId: command.watcherUserId };
 		}
+		if (command.filters) {
+			params.filters = { ...command.filters };
+		}
 
 		const relationsUserIds = await getUserOfConnection.bind(this.dB)(command.watcherUserId, params);
-
 		const [connectionArray, countVar, userData] = await Promise.all([
 			getConnection.bind(this.dB)(command.id, params),
-			countConnection.bind(this.dB)(),
+			countConnection.bind(this.dB, 0, params)(),
 			getUsers.bind(this.dB)({ where: { id_in: relationsUserIds } })
 		]);
 

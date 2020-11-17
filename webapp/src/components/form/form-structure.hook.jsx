@@ -1,9 +1,9 @@
 import  { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-import { fetchJson } from "../../api/APIUtils.js";
+import { fetchJson, getBackEndHost } from "../../api/APIUtils.js";
 
-const BACKEND_HOST = (process.env.REACT_APP_BACKEND_PROTOCOL || 'http') + '://'+ (process.env.REACT_APP_BACKEND_HOST || window.document.location.hostname) + ((process.env.REACT_APP_BACKEND_PORT)? `:${process.env.REACT_APP_BACKEND_PORT}` : '' ) ;
+const BACKEND_HOST = getBackEndHost() ;
 
 const loadStructure = async (table) => {
 	//TODO add caching

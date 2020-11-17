@@ -1,37 +1,34 @@
-import React from "react";
-import {
-	Container,
-	Row,
-	Col 
-} from "react-bootstrap";
-import DataGrid from "../components/data-grid";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Container, Row, Col } from 'react-bootstrap';
+import { PermissionDataGridConsumer } from '../components/permission/permission.component';
+import DataGrid from '../components/data-grid';
 
-const DataList = ({ title, ...props }) => { 
-
-	
-    //TODO Add columns, Title and action Request
+const DataList = ({ title, refTable, refId, table, ...props }) => {
+	//TODO Add columns, Title and action Request
 	return (
 		<Container fluid className="px-md-4">
 			<Row className="border-bottom">
 				<Col className="align-text-bottom">
-					<h2>{title}</h2> 
+					<h2>{title}</h2>
 				</Col>
-            </Row> 
+			</Row>
 			<Row>
 				<Col>
-					<DataGrid {...props} />
+					<PermissionDataGridConsumer table={table} >
+						<DataGrid table={table} refTable={refTable} refId={refId} {...props} />
+					</PermissionDataGridConsumer>
 				</Col>
 			</Row>
 		</Container>
 	);
 };
 
-export default DataList;
+DataList.propTypes = {
+	title: PropTypes.string.isRequired,
+	table: PropTypes.string.isRequired,
+	refTable: PropTypes.string,
+	refId: PropTypes.number
+};
 
-/* <Col className="d-none d-md-block " sm={false}>
-    <ButtonToolbar className="justify-content-end" aria-label="Toolbar with button groups">
-        <ButtonGroup aria-label="First group">
-            <Button className="mr-2" >1</Button> <Button className="mr-2" >2</Button>
-        </ButtonGroup>
-    </ButtonToolbar>
-</Col> */
+export default DataList;
