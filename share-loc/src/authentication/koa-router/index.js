@@ -6,7 +6,7 @@ import passportLocal from 'passport-local';
 import Boom from '@hapi/boom';
 
 import * as usersModel from 'data/proxy/user';
-import {findTokenByID, createToken, deleteToken} from 'data/sequelize/model/token';
+import { findTokenByID, createToken, deleteToken } from 'data/sequelize/model/token';
 
 const LocalStrategy = passportLocal.Strategy;
 
@@ -42,14 +42,14 @@ const checkValidToken = jwtPayload => {
 
 const strategy = new LocalStrategy(async (username, password, done) => {
 	try {
-		const check = await usersModel.userPasswordCheck({username, password});
+		const check = await usersModel.userPasswordCheck({ username, password });
 		if (check.statusCode === 200) {
 			return done(null, {
 				user: {
 					id: check.data[0].username,
 					key: check.data[0].id,
 					username: check.data[0].username,
-					role: check.data[0].username,
+					role: check.data[0].role,
 					fullName: check.data[0].fullName
 				}
 			});
@@ -123,19 +123,19 @@ export const localAuthHandler = (ctx, next) => {
 			throw Boom.badData(msg);
 		} else {
 			try {
-				const payload = {...user, expiration: Date.now() + APP_JWT_EXPIRATION};
+				const payload = { ...user, expiration: Date.now() + APP_JWT_EXPIRATION };
 				const secret = APP_SECRET;
 				const token = jwt.sign(payload, secret, {
 					expiresIn: APP_JWT_EXPIRATION
 				});
 				// console.log(user);
-				const dbToken = await createToken({token, userId: user.user.key});
+				const dbToken = await createToken({ token, userId: user.user.key });
 				subscriberCoockie(ctx, dbToken.id);
 
 				ctx.body = {
 					statusCode: 200,
 					message: 'Login OK',
-					data: [{token, tokenExpiry: APP_JWT_EXPIRATION}]
+					data: [{ token, tokenExpiry: APP_JWT_EXPIRATION }]
 				};
 			} catch (e) {
 				throw Boom.badImplementation(e.message);
@@ -163,7 +163,7 @@ export const authRefresh = async ctx => {
 	}
 	checkValidToken(jwtPayload);
 
-	const result = await usersModel.getUser({id: dbToken.userId});
+	const result = await usersModel.getUser({ id: dbToken.userId });
 
 	if (!result || result.statusCode !== 200) {
 		throw Error('User not found');
@@ -174,20 +174,20 @@ export const authRefresh = async ctx => {
 	}
 
 	try {
-		const userObj = {user: jwtPayload.user};
-		const payload = {...userObj, expiration: Date.now() + APP_JWT_EXPIRATION};
+		const userObj = { user: jwtPayload.user };
+		const payload = { ...userObj, expiration: Date.now() + APP_JWT_EXPIRATION };
 		const secret = APP_SECRET;
 		const token = jwt.sign(payload, secret, {
 			expiresIn: APP_JWT_EXPIRATION
 		});
 		await deleteToken(dbToken.id);
-		const newDbToken = await createToken({token, userId: jwtPayload.user.key});
+		const newDbToken = await createToken({ token, userId: jwtPayload.user.key });
 		subscriberCoockie(ctx, newDbToken.id);
 
 		ctx.body = {
 			statusCode: 200,
 			message: 'Refresh ok',
-			data: [{token, tokenExpiry: APP_JWT_EXPIRATION}]
+			data: [{ token, tokenExpiry: APP_JWT_EXPIRATION }]
 		};
 	} catch (e) {
 		throw Boom.badImplementation(e.message);
