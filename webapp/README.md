@@ -26,11 +26,14 @@ docker run -it --name share_loc_spa_name -p 80:80 share_loc_spa_image
 
 ### Default Users
 - Default User
+  - role: Administrator
   - username: admin
   - password: t3$T1101
-- FullName 1
-  - username: FullName 1
-  - password: t3$T1101123
 - NextTest5
+  - role: Moderator
   - username: NextTest5
+  - password: t3$T1101123
+- FullName 1
+  - role: User
+  - username: FullName 1
   - password: t3$T1101123
