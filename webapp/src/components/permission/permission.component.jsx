@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import { useAuth } from '../auth/auth.component';
+import DisplayError from '../display-error/display-error.component';
+
 import PermissionError from '../../api/PermissionError';
 
-const permissions = {
+const PERMISSIONS = {
 	ADMIN: {
 		actions: {
 			user: {
@@ -26,22 +28,22 @@ const permissions = {
 			}
 		},
 		menuItem: {
-            dashboard: true,
-            shareloc:true,
-            'shareloc.map': true,
-            settings: true,
-            'settings.myProfile': true,
-            'settings.userList': true
+			dashboard: true,
+			shareloc: true,
+			'shareloc.map': true,
+			settings: true,
+			'settings.myProfile': true,
+			'settings.userList': true
 		},
 		toolbarItem: {}
 	},
 	MODERATOR: {
 		actions: {
 			user: {
-				POST: true,
+				POST: false,
 				GET: true,
 				PUT: true,
-				DELETE: true
+				DELETE: false
 			},
 			connections: {
 				POST: true,
@@ -57,22 +59,19 @@ const permissions = {
 			}
 		},
 		menuItem: {
-            dashboard: true,
-            shareloc:true,
-            'shareloc.map': true,
-            settings: true,
-            'settings.myProfile': true,
-            'settings.userList': false
+			dashboard: true,
+			shareloc: true,
+			'shareloc.map': true,
+			settings: true,
+			'settings.myProfile': true,
+			'settings.userList': false
 		},
 		toolbarItem: {}
 	},
 	USER: {
 		actions: {
 			user: {
-				POST: true,
-				GET: true,
-				PUT: true,
-				DELETE: true
+				GET: true
 			},
 			connections: {
 				POST: true,
@@ -88,45 +87,19 @@ const permissions = {
 			}
 		},
 		menuItem: {
-            dashboard: true,
-            shareloc:true,
-            'shareloc.map': true,
-            settings: true,
-            'settings.myProfile': true,
-            'settings.userList': false
+			dashboard: false,
+			shareloc: true,
+			'shareloc.map': true,
+			settings: true,
+			'settings.myProfile': true,
+			'settings.userList': false
 		},
 		toolbarItem: {}
 	},
 	PUBLIC: {
-		actions: {
-			user: {
-				POST: true,
-				GET: true,
-				PUT: true,
-				DELETE: true
-			},
-			connections: {
-				POST: true,
-				GET: true,
-				PUT: true,
-				DELETE: true
-			},
-			mark: {
-				POST: true,
-				GET: true,
-				PUT: true,
-				DELETE: true
-			}
-		},
-		menuItem: {
-            dashboard: true,
-            shareloc:true,
-            'shareloc.map': true,
-            settings: true,
-            'settings.myProfile': true,
-            'settings.userList': false
-		},
-		toolbarItem: {}
+		actions: null,
+		menuItem: null,
+		toolbarItem: null
 	}
 };
 
@@ -141,13 +114,17 @@ const PermissionProvider = ({ children }) => {
 // 	return <permissionContext.Consumer>{children}</permissionContext.Consumer>;
 // };
 const usePermission = () => {
-    return useContext(permissionContext);
+	return useContext(permissionContext);
 };
 
 const PermissionFormConsumer = ({ table, newRec, children, ...props }) => {
 	return (
 		<permissionContext.Consumer>
 			{({ actions }) => {
+				if (!actions) {
+					return <DisplayError>{`loading permission`} </DisplayError>;
+				}
+
 				if (!actions[table]) {
 					throw new PermissionError(403, `You can not access ${table} records`);
 				}
@@ -157,9 +134,9 @@ const PermissionFormConsumer = ({ table, newRec, children, ...props }) => {
 				}
 				if (!newRec && !actions[table].PUT) {
 					if (actions[table].GET) {
-						return React.Children.map(children, child => { 
+						return React.Children.map(children, child => {
 							return React.cloneElement(child, { isReadOnly: true }, null);
-						}); 
+						});
 					} else {
 						throw new PermissionError(403, `You can not edit records to table ${table}`);
 					}
@@ -170,41 +147,53 @@ const PermissionFormConsumer = ({ table, newRec, children, ...props }) => {
 	);
 };
 
-const PermissionDataGridConsumer = ({ table, children}) => {
-    return (
-        <permissionContext.Consumer>
-        {({ actions }) => {
-            if (!actions[table]) {
-                throw new PermissionError(403, `You can not access ${table} records`);
-            }
-            return children;
-        }}
-        </permissionContext.Consumer>
-    );
-}
+const PermissionDataGridConsumer = ({ table, children }) => {
+	return (
+		<permissionContext.Consumer>
+			{({ actions }) => {
+				if (!actions) {
+					return <DisplayError>{`loading permission`} </DisplayError>;
+				}
+
+				if (!actions[table]) {
+					throw new PermissionError(403, `You can not access ${table} records`);
+				}
+
+				if (!actions[table].GET) {
+					throw new PermissionError(403, `You can not read records from table ${table}`);
+				}
+				return children;
+			}}
+		</permissionContext.Consumer>
+	);
+};
 const PermissionMenuItemConsumer = ({ menuItemId, children, ...props }) => {
 	return (
-        <permissionContext.Consumer>
-        {({ menuItem }) => {
-            return children;
-        }}
-        </permissionContext.Consumer>
-    )
-}
+		<permissionContext.Consumer>
+			{({ menuItem }) => {
+				return children;
+			}}
+		</permissionContext.Consumer>
+	);
+};
 
 function useProvidePermission() {
 	const auth = useAuth();
-	const [permission, setPermission] = useState(permissions.PUBLIC);
+	const [permission, setPermission] = useState(PERMISSIONS.PUBLIC);
 
 	useEffect(() => {
-		if (auth?.user?.role && permissions[auth.user.role.toUpperCase()]) {
-			setPermission(permissions[auth.user.role.toUpperCase()]);
+		if (auth?.user?.role && PERMISSIONS[auth.user.role.toUpperCase()]) {
+			setPermission(PERMISSIONS[auth.user.role.toUpperCase()]);
 		}
-	}, [auth.user]);
+	}, [auth.user.role]);
 
-	return {
-		...permission
-	};
+	return permission;
 }
 
-export { PermissionProvider, usePermission, PermissionFormConsumer, PermissionDataGridConsumer, PermissionMenuItemConsumer };
+export {
+	PermissionProvider,
+	usePermission,
+	PermissionFormConsumer,
+	PermissionDataGridConsumer,
+	PermissionMenuItemConsumer
+};
